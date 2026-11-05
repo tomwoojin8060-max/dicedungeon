@@ -1,0 +1,899 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>주사위 던전 — 손그림 애니메이션 에디션</title><style>
+:root{color-scheme:dark;--bg:#0b1020;--card:#182139;--line:#34415f;--text:#eff3ff;--muted:#9daac7;--gold:#f9c46a;--green:#6ee7aa;--red:#fb8c94}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#27365d,#0b1020 60%);font-family:system-ui,-apple-system,sans-serif;color:var(--text)}main{max-width:860px;margin:auto;padding:18px 13px 45px}header{text-align:center;margin:8px 0 18px}h1{font-size:clamp(25px,6vw,38px);margin:0;color:#f7d89b}header p{color:var(--muted);font-size:13px;margin:6px}section{background:linear-gradient(145deg,#1b2640,#141c31);border:1px solid var(--line);border-radius:17px;padding:16px;margin:12px 0;box-shadow:0 10px 24px #0002}.top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.pill{background:#293650;border:1px solid #455371;padding:6px 11px;border-radius:20px;font-size:12px}.gold{color:var(--gold)}.muted{color:var(--muted)}h2{font-size:17px;margin:0 0 12px}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:13px}.stat{background:#10182a;border:1px solid #2b3852;padding:9px 3px;text-align:center;border-radius:9px;font-size:12px}.stat b{display:block;font-size:19px;margin-top:4px}.bar{height:11px;background:#3d2734;border-radius:12px;overflow:hidden;margin-top:7px}.bar>div{height:100%;background:linear-gradient(90deg,#3ecb85,#8ff0af);transition:width .3s}.arena{display:grid;gap:5px;margin:20px 0 12px}.cell{min-height:70px;background:#111a2d;border:1px solid #384563;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}.cell .sprite{font-size:30px}.cell small{font-size:10px;color:#aab7d4}.cell.player{background:#153e37;border-color:#43c69a}.cell.enemy{background:#472632;border-color:#e16c7c}.cell.both{background:#553d37}.battleinfo{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted)}.battleinfo strong{color:white}.buttons{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}button{border:1px solid #63739a;background:#34466e;color:#fff;border-radius:10px;padding:13px 9px;font-weight:750;font-size:14px;cursor:pointer;touch-action:manipulation}button:disabled{opacity:.35;cursor:not-allowed}button.primary{background:linear-gradient(135deg,#c68c4d,#926034);border-color:#f1bb77}button.secondary{background:#24324d}button.danger{background:#733d4b}button:hover:not(:disabled){filter:brightness(1.13)}.log{background:#0c1425;border:1px solid #2a3851;border-radius:10px;padding:10px;max-height:170px;overflow:auto;font-size:13px;line-height:1.7}.log p{margin:3px 0}.notice{padding:11px;background:#293750;border-radius:10px;font-size:13px;line-height:1.6}.items{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}.item{border:1px solid #3e4c6a;background:#111a2e;padding:12px;border-radius:11px;font-size:13px}.item strong{display:block;font-size:14px;margin-bottom:6px}.item button{margin-top:9px;width:100%;padding:9px}.hidden{display:none!important}.footer{color:#9daac7;text-align:center;font-size:12px;margin-top:14px}.dice{display:inline-block;background:#f1e4cd;color:#1b2336;border-radius:7px;padding:3px 9px;font-size:20px;font-weight:900;margin:0 5px}.hint{font-size:12px;color:#b9c6df;margin:8px 0}.shoprow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.shoprow .item{min-width:0}.shoprow button{font-size:12px}.tag{font-size:11px;color:var(--gold)}@media(max-width:470px){.cell{min-height:59px}.cell .sprite{font-size:24px}.shoprow{grid-template-columns:1fr}.stats{gap:3px}.stat{font-size:11px}.stat b{font-size:17px}}
+
+/* 손그림판 스타일 */
+:root{--bg:#f0dfb7;--card:#f7e9c8;--line:#44352b;--text:#2e2825;--muted:#68584a;--gold:#98631e;--green:#28734e;--red:#b43c45;color-scheme:light}
+body{background:repeating-linear-gradient(0deg,#f1e0b9 0 24px,#eddbb3 24px 25px);color:var(--text);font-family:'Comic Sans MS','Trebuchet MS',system-ui,sans-serif}
+header h1{color:#503728;text-shadow:2px 2px #d8b782;transform:rotate(-1deg)}header p{color:#6e5943}
+section{background:#fff3d4;border:3px solid #46362c;border-radius:13px 18px 12px 19px;box-shadow:5px 6px 0 #bca37b;transform:rotate(-.12deg)}
+.pill,.stat,.notice,.item,.log{background:#f5e3bd;color:#3a302a;border:2px solid #6e5841;border-radius:9px 13px 8px 12px}.muted,.battleinfo,.cell small,.footer,.hint{color:#695746}.stats .stat{background:#f8e8c8}.stat b{color:#2e2825}.bar{background:#d8b6a8;border:2px solid #4a382c;height:15px}.bar>div{background:#77ba79}.gold,.tag{color:#98601e}
+button{background:#c9d9ae;color:#302c24;border:3px solid #453a2c;border-radius:10px 14px 9px 13px;box-shadow:2px 3px 0 #88755a;font-family:inherit;font-weight:900;transition:transform .12s}button.primary{background:#f4bf79;border-color:#473729}button.secondary{background:#b7d6d1}button.danger{background:#e9a8a3}button:active:not(:disabled){transform:translate(2px,3px);box-shadow:none}
+.arena{gap:3px;background:linear-gradient(#d3c1a3 0 53%,#a88d68 53%);border:3px solid #4d3b2f;border-radius:12px;padding:9px 5px 5px;position:relative;overflow:hidden}.arena:before{content:'✦   ✧     ✦      ✧    ✦';position:absolute;top:5px;left:12px;color:#8a7559;opacity:.6;pointer-events:none}.cell{background:transparent;border:1px dashed #9b8565;border-radius:6px;min-height:112px;z-index:1}.cell.player,.cell.enemy,.cell.both{background:transparent;border:1px dashed #8d745a}.cell .sprite{display:flex;align-items:end;justify-content:center;height:80px;width:100%;font-size:30px}.cell .sprite svg{width:100%;max-width:100px;height:80px;overflow:visible;filter:drop-shadow(2px 3px 0 #624c3960)}.cell small{background:#f7e7c3;padding:1px 5px;border-radius:5px;color:#4c382b;font-weight:800}.dice{background:#fff8e5;border:3px solid #483529;color:#2e2825;transform:rotate(-5deg)}.log{background:#f4e5c9}.log p{color:#3d342d}
+@media(max-width:470px){.cell{min-height:90px}.cell .sprite{height:62px}.cell .sprite svg{height:61px}.shoprow{grid-template-columns:repeat(3,minmax(0,1fr))}.shoprow .item{padding:6px;font-size:11px}.shoprow button{padding:7px 2px}}
+
+/* 한 화면 플레이용 손그림 UI */
+:root{--bg:#eee0bf;--card:#fff3d7;--line:#604c38;--text:#332b25;--muted:#736653;--gold:#a16b21;--green:#37775a;--red:#a64e4d;color-scheme:light}
+body{background:repeating-linear-gradient(0deg,#e8d7b5 0 34px,#e4d0a9 35px 36px);color:var(--text);font-family:'Trebuchet MS',system-ui,sans-serif}
+main{max-width:920px;min-height:100dvh;padding:7px 10px 10px;display:flex;flex-direction:column;gap:7px}
+header{margin:0;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:8px}h1{font-size:clamp(19px,4vw,27px);color:#4e3b2b;transform:rotate(-1deg)}header p{font-size:10px;margin:0}
+section{margin:0;background:#fff2d3;border:3px solid #584534;border-radius:13px 9px 15px 11px;padding:9px 11px;box-shadow:3px 4px 0 #8f7955;flex-shrink:0}
+section:first-of-type{padding:8px 11px}section#battleSection{display:flex;flex-direction:column;gap:6px;flex:1;min-height:0}section#shopSection{flex:1;min-height:0;overflow:auto}
+.pill{background:#f7dfaa;color:#4b392a;border:2px solid #806445;border-radius:10px;padding:4px 8px;font-weight:700}
+.muted,.battleinfo{color:#6e5b49}h2{font-size:15px;margin:0 0 4px}.stats{margin-top:5px;gap:5px}.stat{background:#f9e5b9;border:2px solid #b99a65;border-radius:7px;padding:3px 1px;font-size:11px}.stat b{font-size:15px;margin-top:1px}.bar{height:9px;margin-top:3px;background:#cdaaa0}.bar>div{background:#6aaf78}
+.arena{flex:1;min-height:140px;max-height:310px;margin:3px 0 2px;align-items:stretch;background:linear-gradient(#d9c9a4 0 66%,#b69a72 66%);padding:8px;border:3px solid #756047;border-radius:12px;position:relative;overflow:hidden}
+.arena:before{content:'✧  ✦  ✧  ✦';position:absolute;top:8px;left:0;width:100%;text-align:center;color:#f7e9bb;font-size:22px;pointer-events:none}
+.cell{background:transparent;border:0;border-bottom:4px dashed #8b7356;border-radius:0;min-height:0;z-index:1;justify-content:end;padding-bottom:4px;transition:transform .25s}.cell.player,.cell.enemy{background:transparent;border-color:#80674c}.cell .sprite{font-size:22px;display:block;width:100%;max-width:100px;filter:drop-shadow(2px 4px 0 #5d4b3740);transform-origin:bottom center}.cell .sprite svg{width:100%;max-height:170px;overflow:visible}.cell small{font-size:10px;color:#574630;background:#f5e6c5;border-radius:4px;padding:1px 3px}
+.battleinfo{font-size:12px}.battleinfo strong{color:#382d24}.notice{background:#fbe3ad;border:2px dashed #b58b4d;color:#59412b;padding:7px 9px;border-radius:9px;font-size:12px;min-height:33px;margin:0!important}
+.buttons{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}button{border:3px solid #4d3b2c;background:#f5d994;color:#372d25;border-radius:11px 7px 12px 8px;padding:11px 3px;font-size:clamp(11px,2.8vw,15px);font-weight:900;box-shadow:2px 3px 0 #9b7852;transition:transform .1s,filter .1s;min-height:44px}button.primary{background:#f2b77a;border-color:#6d4834;color:#38281f}button.secondary{background:#c4d8b2;border-color:#586849;color:#2c3e2b}button.danger{background:#e4a6a0}button:active:not(:disabled){transform:translate(2px,3px);box-shadow:none}button:hover:not(:disabled){filter:brightness(1.05)}
+#subpanel{margin-top:3px!important;max-height:27dvh;overflow:auto;background:#f5e4c3;border:2px dashed #9a7a4c;padding:7px;border-radius:9px}#subpanel .buttons{grid-template-columns:repeat(2,1fr)}.items{grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:5px}.item{background:#f6e4bd;border:2px solid #aa8b5f;color:#4b392a;padding:8px;border-radius:9px}.item strong{font-size:12px}.item button{min-height:32px;padding:5px}.shoprow{gap:6px}.log{max-height:90px;background:#f5e5c7;color:#4a3b2d;border-color:#ad8b5c;padding:6px;font-size:11px}section:has(>.log){padding:5px 9px}section:has(>.log) h2{font-size:12px;margin:0 0 3px}.footer{display:none}
+@keyframes heroSlash{0%{transform:translateX(0) rotate(0)}35%{transform:translateX(24px) rotate(16deg)}70%{transform:translateX(5px) rotate(-9deg)}100%{transform:none}}
+@keyframes hurt{0%,100%{transform:translateX(0);opacity:1}25%,75%{transform:translateX(-7px);opacity:.5}50%{transform:translateX(7px);opacity:1}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes arrive{0%{transform:translateX(-24px);opacity:.3}100%{transform:translateX(0);opacity:1}}
+@keyframes dicePop{0%{transform:rotate(-35deg) scale(.7)}65%{transform:rotate(15deg) scale(1.3)}100%{transform:rotate(0) scale(1)}}
+.cell.player .sprite{animation:bob 2s ease-in-out infinite}.cell.enemy .sprite{animation:bob 2.4s ease-in-out infinite .3s}
+.arena.fx-attack .cell.player .sprite{animation:heroSlash .42s ease-out!important}.arena.fx-hurt .cell.player .sprite{animation:hurt .5s ease-in-out!important}.arena.fx-enemy .cell.enemy .sprite{animation:hurt .5s ease-in-out!important}.arena.fx-move .cell.player .sprite,.arena.fx-approach .cell.enemy .sprite{animation:arrive .4s ease-out!important}
+.dice{background:#fff9e8;color:#503b2a;border:2px solid #654b32;animation:dicePop .5s ease-out}
+@media(max-width:600px){main{padding:5px 6px;gap:5px}section{padding:7px;border-width:2px;box-shadow:2px 2px 0 #8f7955}header p{display:none}.top{gap:4px}.pill{font-size:10px;padding:3px 5px}#equipment{max-width:47vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.arena{min-height:125px;max-height:33dvh;padding:4px}.cell .sprite svg{max-height:120px}.buttons{gap:4px}button{padding:8px 2px;min-height:43px}.stat{font-size:10px}.stat b{font-size:14px}.log{max-height:52px}.notice{font-size:11px;padding:5px}}
+@media(max-height:700px){.arena{min-height:100px;max-height:26dvh}.cell .sprite svg{max-height:100px}.log{max-height:45px}section:has(>.log){padding:4px}section#battleSection{gap:3px}}
+
+/* 그림판 손그림 버튼 + 연출 무대 */
+button{position:relative;background:#f5d888;border:3px solid #403329;border-radius:17px 8px 16px 10px;box-shadow:3px 4px 0 #765c45,inset 2px 2px 0 #fff6d6;letter-spacing:-.4px;text-shadow:1px 1px #fff5d1;transform:rotate(-.6deg);font-family:'Comic Sans MS','Trebuchet MS',sans-serif}
+button:nth-child(even){border-radius:9px 17px 10px 15px;transform:rotate(.65deg)}button.primary{background:#ffc27e}button.secondary{background:#c9e5b4}button:disabled{filter:grayscale(.7)}button:active:not(:disabled){transform:translate(3px,4px) rotate(0);box-shadow:inset 1px 2px #7a5c40}button:focus-visible{outline:3px dashed #d87b40;outline-offset:3px}
+#battleSection{position:relative}.arena{overflow:hidden}.arena .cell.player .sprite,.arena .cell.enemy .sprite{transition:transform .35s}.arena.hero-strike .cell.player .sprite{animation:bigSlash .85s ease-in-out}.arena.enemy-strike .cell.enemy .sprite{animation:bigSlashReverse .8s ease-in-out}.arena.hero-block .cell.player .sprite{animation:blockHero .8s ease-in-out}.arena hero{} .arena.enemy-hit .cell.enemy .sprite,.arena.hero-hit .cell.player .sprite{animation:shakeHero .65s ease-in-out}.arena .cell.player .sprite svg,.arena .cell.enemy .sprite svg{filter:drop-shadow(3px 4px 0 #6e503c66)}
+@keyframes bigSlash{0%,100%{transform:translateX(0) rotate(0)}30%{transform:translateX(16px) rotate(-19deg) scale(1.13)}55%{transform:translateX(32px) rotate(24deg) scale(1.2)}}@keyframes bigSlashReverse{0%,100%{transform:translateX(0) rotate(0)}35%{transform:translateX(-14px) rotate(16deg)}60%{transform:translateX(-30px) rotate(-15deg) scale(1.15)}}@keyframes blockHero{0%,100%{transform:scale(1)}30%,65%{transform:scale(1.1) translateY(-6px);filter:drop-shadow(0 0 13px #7dbbe7)}}@keyframes shakeHero{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+#stageFx{position:absolute;inset:35px 0 50px;z-index:12;pointer-events:none;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:4px}#stageFx.hidden{display:none!important}#stageFx .fxcaption{background:#fff0c7;border:3px solid #57412e;border-radius:12px 7px 11px 9px;box-shadow:3px 4px 0 #8b674b;color:#4c3326;font-size:clamp(13px,3vw,20px);font-weight:1000;padding:5px 12px;text-align:center}#stageFx .fxcaption.hit{color:#a5292d}#stageFx .fxcaption.good{color:#247a51}.d20wrap{width:105px;height:113px;filter:drop-shadow(5px 7px 0 #57432c99)}.d20wrap svg{width:100%;height:100%}.d20wrap.rolling{animation:d20roll .17s linear infinite}.d20wrap.stop{animation:d20stop .5s ease-out}@keyframes d20roll{0%{transform:rotate(-18deg) scale(.92)}50%{transform:rotate(22deg) scale(1.12)}100%{transform:rotate(-18deg) scale(.92)}}@keyframes d20stop{0%{transform:rotate(28deg) scale(1.2)}65%{transform:rotate(-10deg)}100%{transform:rotate(0) scale(1)}}
+#stageFx .fxdetail{background:#fff8e7;border:2px dashed #76583d;padding:4px 9px;border-radius:9px;font-size:12px;font-weight:800;text-align:center}#battleNotice{font-weight:800;text-align:center}#turnIndicator{font-size:11px;font-weight:900;color:#745334;text-align:center;padding:2px}#actions.busy button,#subpanel.busy button{pointer-events:none;opacity:.55}.floatingDamage{position:absolute;z-index:9;font-size:clamp(23px,5vw,40px);font-weight:1000;color:#bc292c;text-shadow:2px 2px #fff6d5,-2px -2px #fff6d5;animation:floatDamage 1.2s ease-out forwards;pointer-events:none}.floatingDamage.heal{color:#27814e}.floatingDamage.block{color:#3273a1}@keyframes floatDamage{0%{transform:translateY(5px) scale(.5);opacity:0}20%{transform:translateY(-10px) scale(1.2);opacity:1}100%{transform:translateY(-55px) scale(1);opacity:0}}@media(max-width:600px){#stageFx{inset:18px 0 35px}.d20wrap{width:76px;height:81px}#stageFx .fxcaption{font-size:13px;padding:3px 8px}#stageFx .fxdetail{font-size:10px}}
+
+/* hand-drawn controls, merchant and impact animation */
+.uiIcon{width:19px;height:19px;vertical-align:middle;margin-right:5px;flex-shrink:0}
+#actions button{display:flex;align-items:center;justify-content:center;gap:4px;min-height:49px;font-size:13px}
+#actions button:nth-child(1){background:#f5ad7b}#actions button:nth-child(2){background:#b6d6a3}#actions button:nth-child(3){background:#e5b6ad}#actions button:nth-child(4){background:#b6cfe0}
+.hitBurst{position:absolute;z-index:11;width:0;height:0;pointer-events:none;animation:burstFade .58s ease-out forwards}
+.hitBurst span{position:absolute;left:-30px;top:-42px;color:#ffda58;font-size:68px;font-weight:1000;-webkit-text-stroke:2px #ae482c;filter:drop-shadow(2px 3px #fff7df)}
+.hitBurst i{position:absolute;left:-2px;top:-2px;width:6px;height:28px;border-radius:4px;background:#fff5b3;border:2px solid #a85030;transform-origin:3px 3px}
+.hitBurst i:nth-of-type(1){transform:rotate(0deg) translateY(-38px)}.hitBurst i:nth-of-type(2){transform:rotate(90deg) translateY(-38px)}.hitBurst i:nth-of-type(3){transform:rotate(180deg) translateY(-38px)}.hitBurst i:nth-of-type(4){transform:rotate(270deg) translateY(-38px)}
+.hitBurst svg{position:absolute;left:-35px;top:-38px;width:70px;height:76px;overflow:visible}.hitBurst.blocked span{color:#a6e6ff;-webkit-text-stroke:2px #35799a}
+@keyframes burstFade{0%{transform:scale(.15) rotate(-25deg);opacity:0}35%{transform:scale(1.25) rotate(10deg);opacity:1}100%{transform:scale(1.65) rotate(25deg);opacity:0}}
+.merchantScene{display:flex;align-items:center;gap:10px;background:repeating-linear-gradient(90deg,#f6dfa9 0 24px,#edcf93 24px 48px);border:3px solid #785637;border-radius:13px 8px 14px 10px;padding:7px;margin:7px 0 12px;box-shadow:3px 4px #a78458}
+.merchantPortrait{width:85px;min-width:85px;height:88px;background:#fff1d1;border:2px solid #6e4c36;border-radius:40% 40% 10px 10px;overflow:hidden}
+.merchantPortrait svg{height:100%;width:100%;animation:merchantBob 2.5s ease-in-out infinite}
+.merchantSpeech{display:flex;flex-direction:column;gap:5px;color:#503824;font-size:12px;line-height:1.45}
+.merchantSpeech b{font-size:17px}
+@keyframes merchantBob{0%,100%{transform:translateY(2px) rotate(-2deg)}50%{transform:translateY(-3px) rotate(2deg)}}
+#shopItems .item{background:#fff2d2;border:3px solid #79583d;border-radius:13px 8px 12px 7px;box-shadow:3px 4px #b19a70}
+#shopItems .item strong{min-height:33px;color:#55371e}
+#shopItems .item button{background:#b7d7a5;color:#332b20}
+.logToggle{min-height:26px!important;padding:4px 10px!important;font-size:11px!important}
+.logSection .log{max-height:95px;transition:max-height .2s}
+.logSection:has(#logToggle) .log{overflow:auto}
+.logSection .top h2{margin:0}
+@media(max-width:470px){.merchantPortrait{width:66px;min-width:66px;height:70px}.merchantSpeech b{font-size:14px}.merchantSpeech{font-size:11px}#actions button{font-size:12px}}
+
+.itemIcon{width:35px;height:35px;display:block;margin:0 auto 5px;filter:drop-shadow(1px 2px #d5bba0)}
+.cell.enemy{cursor:pointer;position:relative}
+.cell.enemy.target{outline:3px dashed #e49c43;outline-offset:-3px;background:#fff0bf!important}
+.monsterLabel{position:absolute;bottom:-1px;left:0;right:0;font-size:9px;line-height:1.1;background:#fff4d9e8;color:#5d3629;white-space:normal;pointer-events:none}
+.floorMark{font-size:23px;color:#b5a48c}
+#shopItems .item{position:relative}
+#shopItems .item .itemIcon{height:42px;width:42px}
+@media(max-width:470px){.monsterLabel{font-size:8px}.cell .sprite svg{max-width:100%}}
+
+.exchange{margin-top:9px;padding:9px;border:3px dashed #8e6e48;background:#f5e2b8;color:#4c3726;border-radius:12px}
+.exchange .top{margin-bottom:7px}
+.weaponCards{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px}
+.weaponCard{flex:0 0 145px;border:2px solid #95764c;background:#fff3d5;border-radius:10px;padding:7px;text-align:center}
+.weaponCard strong,.weaponCard small{display:block}.weaponCard small{font-size:10px;line-height:1.5}
+.weaponButtons{display:flex;gap:4px;margin-top:5px}
+.weaponButtons button{flex:1;padding:5px 2px;min-height:30px;font-size:11px}
+
+/* Pencil-style knockout and skull animation */
+.deathGhost{position:absolute;z-index:30;width:0;height:0;pointer-events:none}
+.deathSkull{position:absolute;left:-28px;top:-40px;width:56px;height:65px;animation:skullRise .95s ease-out forwards;filter:drop-shadow(2px 3px #7a6249)}
+.deathSkull svg{width:100%;height:100%}
+.deathDust{position:absolute;left:-26px;top:-25px;width:52px;height:52px;border:5px dashed #c9aa75;border-radius:50%;animation:dustPoof .75s ease-out forwards}
+.cell.dying .sprite{animation:characterFall .65s ease-in forwards;transform-origin:center bottom}
+.deathBadge{width:72px;margin:0 auto 8px;animation:skullRise .9s ease-out both}
+.deathBadge svg{width:100%}
+#endSection{text-align:center}
+@keyframes characterFall{0%{transform:rotate(0deg) scale(1);opacity:1}55%{transform:rotate(48deg) scale(.85);opacity:.7}100%{transform:rotate(85deg) translateY(12px) scale(.35);opacity:0}}
+@keyframes skullRise{0%{transform:translateY(18px) scale(.5) rotate(-14deg);opacity:0}35%{transform:translateY(-9px) scale(1.2) rotate(8deg);opacity:1}75%{opacity:1}100%{transform:translateY(-32px) scale(.9) rotate(0deg);opacity:0}}
+#endSection .deathBadge{animation:none}
+@keyframes dustPoof{0%{transform:scale(.25);opacity:1}100%{transform:scale(1.7);opacity:0}}
+
+#eventSection{flex:1;overflow:auto;padding:12px}
+.eventCard{text-align:center;background:#fff2d2;border:3px solid #806045;border-radius:17px 10px 15px 9px;padding:12px;box-shadow:4px 5px #c5a679}
+.eventArt{width:135px;height:118px;margin:auto;display:flex;align-items:center;justify-content:center}
+.eventArt svg{max-width:100%;max-height:100%}
+.eventCard h2{margin:4px 0 8px}.eventCard p{line-height:1.65;font-size:14px;min-height:48px}
+.eventButtons{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin:14px auto 4px}
+.eventButtons button{background:#e3c594;min-width:120px;border:3px solid #79563c}
+.eventResult{display:inline-block;padding:6px 15px;border:2px dashed #8b6c4b;background:#fff9e6;border-radius:9px;font-weight:900}
+.cell .fogIcon{display:block;font-size:38px;font-weight:900;color:#a3a5ba;text-shadow:2px 3px #49465a}
+
+/* 직업 선택 및 피해량 표시 */
+#classSection{padding:18px;text-align:center;background:#fff4d7;border:3px solid #82603c;border-radius:15px;margin:12px 0}
+#classSection h2{margin:4px 0 12px}
+.classChoice{border:3px solid #8a6a48;background:#fffaf0;padding:16px;border-radius:13px;text-align:left;margin:12px 0}
+.classChoice h3{margin:0 0 7px}
+.classChoice p{line-height:1.7;font-size:14px}
+.classChoice .free{color:#27794b;font-weight:900}
+body:not(.started) main>section:not(#classSection),body:not(.started) main>.logSection{display:none!important}
+body.started #classSection{display:none!important}
+.guideBox{margin:12px 0;padding:12px;border:3px dashed #8b6a42;border-radius:12px;background:#fff7df}
+.guideBox p{font-size:13px;line-height:1.6}
+.guideBtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.guideBtns button{font-size:12px}
+.floatingDamage{position:fixed!important;z-index:9999!important}
+/* 한 화면 전투: 스크롤 없는 화면 배치와 특수 행동 패널 */
+html,body{height:100%;overflow:hidden}
+main{height:100dvh;min-height:0;overflow:hidden;padding:5px 7px;gap:5px}
+main>section{min-height:0}
+main>section:not(#battleSection):not(#shopSection):not(#eventSection):not(#classSection){padding:5px 7px}
+header{flex:0 0 auto}header h1{font-size:clamp(17px,3.8vw,24px)}
+#battleSection{flex:1;min-height:0;position:relative;overflow:visible}
+#battleSection .arena{flex:1;min-height:85px;max-height:none;margin:0}
+#battleSection .arena .cell{min-height:0}
+#battleSection .arena .cell .sprite{height:min(15dvh,105px)}
+#battleSection .arena .cell .sprite svg{height:100%}
+#actions{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+#actions button{font-size:clamp(10px,2.7vw,14px);min-height:40px;padding:5px 2px}
+#subpanel:not(.hidden){position:absolute;z-index:45;left:5px;right:5px;bottom:47px;max-height:55dvh;overflow:auto;box-shadow:0 0 0 100vmax #34251a44,3px 5px 0 #947655;background:#fff1d1}
+#battleSection .battleinfo{font-size:10px}
+#battleNotice{font-size:11px;min-height:26px;padding:4px}
+#stageFx{z-index:55}
+.logSection{flex:0 0 auto}
+#classSection{overflow:auto;max-height:90dvh}
+#shopSection,#eventSection{overflow:auto}
+#endSection{margin:auto 0}
+@media(max-height:720px){.stats{margin-top:2px}.stat{padding:1px}.stat b{font-size:12px}.bar{margin-top:2px}.logSection{display:none}}
+
+/* 이전 전투창(한 화면 최적화 전)의 크기를 되살리고 주변 여백만 압축 */
+html,body{height:100%;margin:0;overflow:hidden!important}
+main{height:100dvh!important;max-height:100dvh!important;overflow:hidden!important;
+ display:flex!important;flex-direction:column!important;gap:4px!important;
+ padding:4px 6px!important;box-sizing:border-box!important}
+header{flex:0 0 auto!important;margin:0!important;padding:0!important}
+header h1{font-size:clamp(18px,4vw,26px)!important;line-height:1.1!important;margin:0!important}
+header p{display:none!important}
+main>section{margin:0!important;min-height:0}
+main>section:first-of-type:not(#classSection){flex:0 0 auto!important;padding:5px 7px!important}
+main>section:first-of-type:not(#classSection) .stats{margin-top:3px!important}
+main>section:first-of-type:not(#classSection) .stat{padding:2px 1px!important}
+main>section:first-of-type:not(#classSection) .stat b{font-size:clamp(12px,3vw,17px)!important;margin-top:1px!important}
+main>section:first-of-type:not(#classSection) .bar{height:7px!important;margin-top:3px!important}
+#battleSection:not(.hidden){flex:0 0 auto!important;display:flex!important;
+ flex-direction:column!important;gap:4px!important;padding:6px 8px!important;overflow:visible!important}
+#battleSection .top{flex:0 0 auto!important}
+#battleSection .top h2{margin:0!important}
+#battleSection .arena{height:clamp(180px,28dvh,310px)!important;
+ min-height:clamp(180px,28dvh,310px)!important;max-height:clamp(180px,28dvh,310px)!important;
+ flex:none!important;margin:2px 0!important;padding:5px!important}
+#battleSection .arena .cell{min-height:0!important}
+#battleSection .arena .cell .sprite{height:clamp(75px,13dvh,115px)!important}
+#battleSection .arena .cell .sprite svg{height:100%!important}
+#battleSection #turnIndicator,#battleSection .battleinfo{font-size:clamp(10px,2.5vw,13px)!important;line-height:1.2!important}
+#battleNotice{min-height:0!important;padding:4px!important;margin:0!important;font-size:11px!important}
+#actions{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important}
+#actions button{min-height:clamp(36px,5.3dvh,48px)!important;padding:4px 1px!important;
+ font-size:clamp(10px,2.7vw,14px)!important}
+.logSection{display:flex!important;flex-direction:column!important;flex:1 1 0!important;
+ min-height:48px!important;overflow:hidden!important;padding:5px 7px!important}
+.logSection .top{flex:0 0 auto!important}
+.logSection .log{flex:1 1 0!important;min-height:0!important;max-height:none!important;
+ overflow-y:auto!important;overscroll-behavior:contain}
+#subpanel:not(.hidden){position:absolute!important;z-index:45;left:5px;right:5px;
+ bottom:calc(clamp(36px,5.3dvh,48px) + 5px)!important;max-height:48dvh;overflow:auto}
+#eventSection:not(.hidden){flex:1 1 0!important;min-height:0!important}
+#shopSection:not(.hidden),#classSection:not(.hidden){flex:1 1 0!important;overflow:auto!important}
+.footer{display:none!important}
+@media(max-height:740px){
+ #battleSection .arena{height:clamp(150px,25dvh,220px)!important;
+ min-height:clamp(150px,25dvh,220px)!important;max-height:clamp(150px,25dvh,220px)!important}
+ #battleSection .arena .cell .sprite{height:75px!important}
+ .logSection{min-height:38px!important}
+}
+
+/* 전투 기록은 두 줄만 노출하고, 확보된 높이를 전투 무대에 배정 */
+body.started .logSection{
+ flex:0 0 auto!important;height:65px!important;min-height:65px!important;
+ max-height:65px!important;box-sizing:border-box!important;
+ padding:4px 7px!important;overflow:hidden!important;
+}
+body.started .logSection .top{height:16px!important;min-height:16px!important;flex:0 0 16px!important}
+body.started .logSection .top h2{font-size:11px!important;line-height:15px!important}
+body.started .logSection .log{
+ flex:1 1 auto!important;min-height:0!important;max-height:none!important;
+ height:auto!important;overflow-y:auto!important;
+ font-size:11px!important;line-height:15px!important;padding:3px 5px!important;
+}
+body.started .logSection .log p{line-height:15px!important;margin:0!important;padding:0!important}
+body.started #battleSection:not(.hidden){flex:1 1 0!important;min-height:0!important;overflow:visible!important}
+body.started #battleSection:not(.hidden) .arena{
+ flex:1 1 0!important;height:auto!important;min-height:0!important;
+ max-height:none!important;overflow:hidden!important;
+}
+@media(max-height:650px){body.started .logSection{height:59px!important;min-height:59px!important;max-height:59px!important}}
+
+/* 두 시험판의 중간: 로그를 조금 넓히고 전투창은 그만큼 줄임 */
+body.started .logSection{height:clamp(88px,12dvh,112px)!important;min-height:clamp(88px,12dvh,112px)!important;max-height:clamp(88px,12dvh,112px)!important}
+@media(max-height:650px){body.started .logSection{height:82px!important;min-height:82px!important;max-height:82px!important}}
+/* 미세 조정: 로그 +14px, 전투 영역은 flex로 그만큼 감소 */
+body.started .logSection{height:clamp(102px,calc(12dvh + 14px),126px)!important;min-height:clamp(102px,calc(12dvh + 14px),126px)!important;max-height:clamp(102px,calc(12dvh + 14px),126px)!important}
+@media(max-height:650px){body.started .logSection{height:96px!important;min-height:96px!important;max-height:96px!important}}
+
+/* 공격 버튼 약 두 개 높이(각 44px)만큼 로그 확대: 전투 무대가 같은 양만큼 줄어듦 */
+body.started .logSection{height:clamp(190px,calc(12dvh + 102px),214px)!important;min-height:clamp(190px,calc(12dvh + 102px),214px)!important;max-height:clamp(190px,calc(12dvh + 102px),214px)!important}
+@media(max-height:650px){body.started .logSection{height:184px!important;min-height:184px!important;max-height:184px!important}}
+
+/* 추가 조정: 전투창을 공격 버튼 하나(44px) 높이만큼 줄이고 로그창에 할당 */
+body.started .logSection{height:clamp(234px,calc(12dvh + 146px),258px)!important;min-height:clamp(234px,calc(12dvh + 146px),258px)!important;max-height:clamp(234px,calc(12dvh + 146px),258px)!important}
+@media(max-height:650px){body.started .logSection{height:228px!important;min-height:228px!important;max-height:228px!important}}
+
+/* 요청 반영: 현재 버전에서 전투창 + 공격 버튼 2개 높이(88px), 로그창 -88px */
+body.started .logSection{height:clamp(146px,calc(12dvh + 58px),170px)!important;min-height:clamp(146px,calc(12dvh + 58px),170px)!important;max-height:clamp(146px,calc(12dvh + 58px),170px)!important}
+@media(max-height:650px){body.started .logSection{height:140px!important;min-height:140px!important;max-height:140px!important}}
+
+/* 전투창을 공격 버튼 하나 높이(44px)만큼 추가 확대, 로그는 동일하게 축소 */
+body.started .logSection{height:clamp(102px,calc(12dvh + 14px),126px)!important;min-height:clamp(102px,calc(12dvh + 14px),126px)!important;max-height:clamp(102px,calc(12dvh + 14px),126px)!important}
+@media(max-height:650px){body.started .logSection{height:96px!important;min-height:96px!important;max-height:96px!important}}
+/* 전투창을 직전 시험판보다 12px만 더 키우고 로그창은 12px 줄임 */
+body.started .logSection{height:clamp(90px,calc(12dvh + 2px),114px)!important;min-height:clamp(90px,calc(12dvh + 2px),114px)!important;max-height:clamp(90px,calc(12dvh + 2px),114px)!important}
+@media(max-height:650px){body.started .logSection{height:84px!important;min-height:84px!important;max-height:84px!important}}
+
+/* 최종 조정: 전투창 24px 축소, 로그창 24px 확대 */
+body.started .logSection{height:clamp(114px,calc(12dvh + 26px),138px)!important;min-height:clamp(114px,calc(12dvh + 26px),138px)!important;max-height:clamp(114px,calc(12dvh + 26px),138px)!important}
+@media(max-height:650px){body.started .logSection{height:108px!important;min-height:108px!important;max-height:108px!important}}
+/* 최종 미세 조정: 전투창 추가 12px 축소, 로그창 추가 12px 확대 */
+body.started .logSection{height:clamp(126px,calc(12dvh + 38px),150px)!important;min-height:clamp(126px,calc(12dvh + 38px),150px)!important;max-height:clamp(126px,calc(12dvh + 38px),150px)!important}
+@media(max-height:650px){body.started .logSection{height:120px!important;min-height:120px!important;max-height:120px!important}}
+
+/* 이동 선택은 로그 영역 위에 띄우고 취소 가능. 기존 전투/로그 높이는 유지 */
+body.started #subpanel:not(.hidden)[data-mode="move"]{
+ position:fixed!important;left:50%!important;right:auto!important;
+ bottom:calc(env(safe-area-inset-bottom, 0px) + 8px)!important;
+ transform:translateX(-50%)!important;width:min(calc(100vw - 16px), 890px)!important;
+ max-height:min(46dvh, 380px)!important;overflow-y:auto!important;
+ z-index:100!important;box-sizing:border-box!important;
+ background:#fff1d1!important;border:3px solid #624b33!important;
+ box-shadow:0 0 0 100vmax #34251a44,3px 5px 0 #947655!important;
+}
+body.started #subpanel[data-mode="move"] .buttons{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+/* 상점은 내용에 따라 세로 스크롤, 구매 후 무기 보관함이 생겨도 상품 그림 보존 */
+body.started #shopSection:not(.hidden){overflow-y:auto!important;overflow-x:hidden!important;min-height:0!important;
+ overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#shopItems{align-items:stretch!important;grid-auto-rows:auto!important;overflow:visible!important}
+#shopItems .item{min-width:0!important;min-height:145px!important;display:flex!important;
+ flex-direction:column!important;align-items:stretch!important;overflow:visible!important}
+#shopItems .item .itemIcon{display:block!important;flex:0 0 42px!important;
+ width:42px!important;height:42px!important;min-height:42px!important;align-self:center!important;
+ visibility:visible!important;opacity:1!important}
+#shopItems .item button{margin-top:auto!important}
+#weaponExchange,#guidebook{flex-shrink:0!important}
+
+/* 이동 선택창은 전투 영역 바깥(body)에 두어 로그 바로 위가 아니라 화면 하단에 고정 */
+body.started > #subpanel:not(.hidden)[data-mode="move"]{
+ position:fixed!important;inset:auto 8px calc(env(safe-area-inset-bottom, 0px) + 6px) 8px!important;
+ width:auto!important;max-width:900px!important;margin:0 auto!important;
+ transform:none!important;z-index:9999!important;max-height:min(50dvh,420px)!important;
+ overflow-y:auto!important;box-sizing:border-box!important;
+ background:#fff1d1!important;border:3px solid #624b33!important;
+ box-shadow:0 0 0 100vmax #34251a55,3px 5px 0 #947655!important;
+}
+/* 상점은 카드 크기를 줄이지 않고 상점 내부만 스크롤 */
+body.started #shopSection:not(.hidden){display:block!important;flex:1 1 0!important;
+ height:auto!important;min-height:0!important;max-height:100%!important;
+ overflow-y:scroll!important;overflow-x:hidden!important;overscroll-behavior:contain;
+ -webkit-overflow-scrolling:touch;contain:layout!important}
+#shopItems.shoprow{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ align-items:start!important;grid-auto-rows:max-content!important;gap:6px!important}
+#shopItems.shoprow>.item{min-width:0!important;min-height:164px!important;height:auto!important;
+ overflow:visible!important;display:flex!important;flex-direction:column!important;
+ justify-content:flex-start!important;flex-shrink:0!important}
+#shopItems.shoprow>.item>svg.itemIcon,#weaponExchange svg.itemIcon{
+ display:block!important;width:42px!important;height:42px!important;
+ min-width:42px!important;min-height:42px!important;max-height:none!important;
+ flex:none!important;align-self:center!important;visibility:visible!important;opacity:1!important;
+ transform:none!important}
+#shopItems.shoprow>.item>strong{flex:0 0 auto!important;min-height:0!important}
+#shopItems.shoprow>.item>button{flex:0 0 auto!important;margin-top:auto!important}
+#weaponExchange,.exchange,.weaponCards,.weaponCard,#guidebook{min-height:min-content!important}
+#weaponExchange .weaponCards{overflow-x:auto!important;overflow-y:visible!important}
+@media(max-width:470px){#shopItems.shoprow{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+
+/* Cowboy intro: illustrated panel, isolated from the normal arena layout */
+.cowboyOverlay.intro{background:linear-gradient(180deg,#2a1018,#8f3b29 65%,#211921);padding:16px;box-sizing:border-box}
+.cowboyIntroArt{width:min(94vw,790px);height:min(60vh,470px);border:5px solid #4b2926;border-radius:12px;background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNDYwIj48ZGVmcz48cGF0dGVybiBpZD0icGFwZXIiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMjlMMzAgMjkiIHN0cm9rZT0iI2M3YTk4YSIgb3BhY2l0eT0iLjE2Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ2MCIgZmlsbD0iI2U4Y2JhMSIvPjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNDYwIiBmaWxsPSJ1cmwoI3BhcGVyKSIvPjxjaXJjbGUgY3g9IjYzMCIgY3k9IjEyNSIgcj0iODgiIGZpbGw9IiNlZmFlNzIiIHN0cm9rZT0iIzM0MmIyYSIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtZGFzaGFycmF5PSIyNDAgOSA4MCA2Ii8+PHBhdGggZD0iTTAgMzM1UTg1IDI5MCAxNjAgMzM1VDM1MCAzMjlUNTkwIDMyOFQ4MDAgMzE3VjQ2MEgwWiIgZmlsbD0iI2Q5OWI3OSIgc3Ryb2tlPSIjMzIyODI2IiBzdHJva2Utd2lkdGg9IjciLz48cGF0aCBkPSJNMCAzOTlRMTIwIDM1MCAyNDAgMzk2VDUyMCAzOThUODAwIDM4NVY0NjBIMFoiIGZpbGw9IiNjNjdkNjciIHN0cm9rZT0iIzMyMjgyNiIgc3Ryb2tlLXdpZHRoPSI2Ii8+PGcgc3Ryb2tlPSIjMjkyMzIzIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxwYXRoIGQ9Ik0yNTggNDI1TDI0NiAyODRRMjcwIDIzNyAzMTggMjM0TDM4MyAyNDBRNDQ4IDI0OCA0NzkgMjk5TDQ4NyA0MjZaIiBmaWxsPSIjNzc1NjRkIiBzdHJva2Utd2lkdGg9IjkiLz48cGF0aCBkPSJNMjkwIDI3OUwzMTQgMjA1TDQxMSAyMDFMNDQzIDI3OEw0MDQgMzE3TDMzMSAzMTJaIiBmaWxsPSIjZTBiNThlIiBzdHJva2Utd2lkdGg9IjgiLz48cGF0aCBkPSJNMzExIDIyOVEzNjcgMjEzIDQyMCAyMzEiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iNyIvPjxwYXRoIGQ9Ik0zMDEgMTk1UTM1MSAxNzEgNDI0IDE5NEw0NDggMjEzUTM2NSAyMjkgMjc0IDIxMVoiIGZpbGw9IiM4YzYwNDkiIHN0cm9rZS13aWR0aD0iOSIvPjxwYXRoIGQ9Ik0zMjkgMTkzTDM0MiAxMzFRMzc1IDExOSA0MDUgMTMzTDQyMCAxOTMiIGZpbGw9IiM4YzYwNDkiIHN0cm9rZS13aWR0aD0iOSIvPjxwYXRoIGQ9Ik0zNDQgMTgwTDQxMSAxODEiIHN0cm9rZT0iI2UzYWU3MiIgc3Ryb2tlLXdpZHRoPSIxMCIvPjxwYXRoIGQ9Ik0zMjkgMjQ2TDM1NSAyNTJNMzkyIDI1M0w0MTQgMjQ1IiBzdHJva2Utd2lkdGg9IjciLz48cGF0aCBkPSJNMzQxIDI1OUwzNTQgMjYwTTM5OSAyNjBMNDA5IDI1OSIgc3Ryb2tlPSIjYWUzZjM0IiBzdHJva2Utd2lkdGg9IjciLz48cGF0aCBkPSJNMzYzIDI4MFEzNzUgMjg4IDM4OCAyODAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iNSIvPjxwYXRoIGQ9Ik0zMjEgMzA2TDM3NSAzNDRMNDI5IDMwNCIgZmlsbD0iI2JkNzU2MSIgc3Ryb2tlLXdpZHRoPSI3Ii8+PHBhdGggZD0iTTQzMyAyOTdMNTI4IDMxMEw1ODEgMjcxTDYxMiAyOTVMNTUwIDM1Mkw0NjMgMzQ4IiBmaWxsPSIjNzc1NjRkIiBzdHJva2Utd2lkdGg9IjkiLz48cGF0aCBkPSJNNTcwIDI3MEw2MDUgMjUwTDY1MCAyNjNMNjM5IDI5Mkw2MDYgMzAyWiIgZmlsbD0iI2UwYjU4ZSIgc3Ryb2tlLXdpZHRoPSI3Ii8+PHBhdGggZD0iTTYyMiAyNjRMNzA3IDIzOEw3MzAgMjQ4TDcwNSAyNjNMNjM2IDI4MloiIGZpbGw9IiM3NzcxNmMiIHN0cm9rZS13aWR0aD0iOCIvPjxwYXRoIGQ9Ik02NTAgMjU3TDY2NyAyODlMNjg2IDI4OSIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSI2Ii8+PHBhdGggZD0iTTI4MiAzMTVMMjM5IDM3MUwyNTkgNDE2IiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIwIi8+PC9nPjxnIGZpbGw9IiMzMzI4MjYiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iYm9sZCI+PHRleHQgeD0iMzUiIHk9IjYyIiBmb250LXNpemU9IjI3IiB0cmFuc2Zvcm09InJvdGF0ZSgtNCAzNSA2MikiPldBTlRFRCE8L3RleHQ+PHRleHQgeD0iNDIiIHk9IjEwMCIgZm9udC1zaXplPSIxNSI+VEhFIExPTkUgR1VOU0xJTkdFUjwvdGV4dD48L2c+PHBhdGggZD0iTTI3IDEyMEwxNDUgMTEwTTQ1IDEzMkwxNzAgMTIyTTU4MiAzNjJMNzQ1IDM1NU01OTIgMzczTDcxOCAzNzEiIHN0cm9rZT0iIzM0MmIyYSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9Ii42NSIvPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMyMjgyNiIgc3Ryb2tlLXdpZHRoPSIzIj48cGF0aCBkPSJNODUgMjkwcTE3IC0zMCAzMyAwcTIwIDI0IDM4IDBNOTQgMjg4cS0xMiAxOCAtNSAzNiIvPjxwYXRoIGQ9Ik03MTUgMTAwbDE4IC05bS01IDIzbDIwIDBtLTIwIDE0bDE3IDExIi8+PC9nPjwvc3ZnPg==");background-position:center;background-size:cover;box-shadow:0 14px 35px #180d12bb;animation:cowboyPop .6s ease both;transform-origin:center;position:relative}
+.cowboyIntroArt.back{filter:sepia(.3) brightness(.65);transform:scaleX(-1)}
+.cowboyIntroArt.glare{animation:cowboyGlare .7s ease both;filter:contrast(1.5)}
+.cowboyIntroArt.spin{animation:cowboySpinArt .7s ease both}
+.cowboyIntroArt.aim{filter:brightness(1.15)}
+@keyframes cowboySpinArt{0%{transform:rotate(-5deg) scale(.92)}45%{transform:rotate(4deg) scale(1.05)}100%{transform:rotate(0) scale(1)}}
+.cowboyOverlay.intro .cowboyBossName{font-size:clamp(40px,10vw,86px);line-height:1.1}
+</style><style>
+.cowboyOverlay{position:fixed;inset:0;z-index:9999;background:linear-gradient(#e9a454 0%,#ce6946 55%,#342d30 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;overflow:hidden;text-align:center;color:#fff4d9;text-shadow:2px 3px 0 #543025}.cowboyOverlay.hidden{display:none!important}.cowboyFigure{font-size:clamp(75px,24vw,160px);filter:drop-shadow(5px 9px 0 #432b2b);animation:cowboyPop .7s ease both}.cowboyFigure.back{transform:scaleX(-1)}.cowboyFigure.glare{animation:cowboyGlare .7s ease both}.cowboyFigure.spin{animation:cowboySpin .8s ease both}.cowboyCaption{font-size:clamp(17px,5vw,28px);font-weight:900;background:#3a2927b8;padding:12px 22px;border-radius:12px;z-index:2}.cowboyBossName{font-size:clamp(48px,13vw,96px);font-weight:1000;letter-spacing:5px;color:#ffdf8e;z-index:3;animation:cowboyPop .5s ease}.cowboySun{position:absolute;top:16%;left:calc(50% - 75px);width:150px;height:150px;border-radius:50%;background:#ffd077;box-shadow:0 0 70px #ffba64}.cowboySilhouette{font-size:clamp(60px,14vw,110px);filter:brightness(0);z-index:2;white-space:pre;animation:cowboyPan 3s ease-in-out infinite alternate}.tumbleweed{position:absolute;bottom:23%;font-size:38px;color:#382a23;animation:tumble 3s linear infinite}.drawButton{z-index:3;background:#ffe4a5!important;color:#81291e!important;font-size:clamp(45px,12vw,90px)!important;font-weight:1000!important;border:6px solid #682b23!important;padding:12px 25px!important;animation:cowboyPop .2s ease}.drawButton small{display:block;font-size:15px}.bombMarker{position:absolute;bottom:2px;left:0;right:0;background:#e8aa4b;color:#3b251d;border-radius:6px;font-size:11px;font-weight:900;z-index:5}.cell{position:relative}@keyframes cowboyPop{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}@keyframes cowboyGlare{from{transform:rotate(-25deg)}to{transform:rotate(0)}}@keyframes cowboySpin{from{transform:rotate(-20deg)}to{transform:rotate(360deg)}}@keyframes cowboyPan{from{transform:translateX(-12px)}to{transform:translateX(12px)}}@keyframes tumble{from{left:-15%;transform:rotate(0)}to{left:110%;transform:rotate(720deg)}}
+
+/* Cowboy intro: illustrated panel, isolated from the normal arena layout */
+.cowboyOverlay.intro{background:linear-gradient(180deg,#2a1018,#8f3b29 65%,#211921);padding:16px;box-sizing:border-box}
+.cowboyIntroArt{width:min(94vw,790px);height:min(60vh,470px);border:5px solid #4b2926;border-radius:12px;background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNDYwIj48ZGVmcz48cGF0dGVybiBpZD0icGFwZXIiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMjlMMzAgMjkiIHN0cm9rZT0iI2M3YTk4YSIgb3BhY2l0eT0iLjE2Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ2MCIgZmlsbD0iI2U4Y2JhMSIvPjxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNDYwIiBmaWxsPSJ1cmwoI3BhcGVyKSIvPjxjaXJjbGUgY3g9IjYzMCIgY3k9IjEyNSIgcj0iODgiIGZpbGw9IiNlZmFlNzIiIHN0cm9rZT0iIzM0MmIyYSIgc3Ryb2tlLXdpZHRoPSI1IiBzdHJva2UtZGFzaGFycmF5PSIyNDAgOSA4MCA2Ii8+PHBhdGggZD0iTTAgMzM1UTg1IDI5MCAxNjAgMzM1VDM1MCAzMjlUNTkwIDMyOFQ4MDAgMzE3VjQ2MEgwWiIgZmlsbD0iI2Q5OWI3OSIgc3Ryb2tlPSIjMzIyODI2IiBzdHJva2Utd2lkdGg9IjciLz48cGF0aCBkPSJNMCAzOTlRMTIwIDM1MCAyNDAgMzk2VDUyMCAzOThUODAwIDM4NVY0NjBIMFoiIGZpbGw9IiNjNjdkNjciIHN0cm9rZT0iIzMyMjgyNiIgc3Ryb2tlLXdpZHRoPSI2Ii8+PGcgc3Ryb2tlPSIjMjkyMzIzIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjxwYXRoIGQ9Ik0yNTggNDI1TDI0NiAyODRRMjcwIDIzNyAzMTggMjM0TDM4MyAyNDBRNDQ4IDI0OCA0NzkgMjk5TDQ4NyA0MjZaIiBmaWxsPSIjNzc1NjRkIiBzdHJva2Utd2lkdGg9IjkiLz48cGF0aCBkPSJNMjkwIDI3OUwzMTQgMjA1TDQxMSAyMDFMNDQzIDI3OEw0MDQgMzE3TDMzMSAzMTJaIiBmaWxsPSIjZTBiNThlIiBzdHJva2Utd2lkdGg9IjgiLz48cGF0aCBkPSJNMzExIDIyOVEzNjcgMjEzIDQyMCAyMzEiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iNyIvPjxwYXRoIGQ9Ik0zMDEgMTk1UTM1MSAxNzEgNDI0IDE5NEw0NDggMjEzUTM2NSAyMjkgMjc0IDIxMVoiIGZpbGw9IiM4YzYwNDkiIHN0cm9rZS13aWR0aD0iOSIvPjxwYXRoIGQ9Ik0zMjkgMTkzTDM0MiAxMzFRMzc1IDExOSA0MDUgMTMzTDQyMCAxOTMiIGZpbGw9IiM4YzYwNDkiIHN0cm9rZS13aWR0aD0iOSIvPjxwYXRoIGQ9Ik0zNDQgMTgwTDQxMSAxODEiIHN0cm9rZT0iI2UzYWU3MiIgc3Ryb2tlLXdpZHRoPSIxMCIvPjxwYXRoIGQ9Ik0zMjkgMjQ2TDM1NSAyNTJNMzkyIDI1M0w0MTQgMjQ1IiBzdHJva2Utd2lkdGg9IjciLz48cGF0aCBkPSJNMzQxIDI1OUwzNTQgMjYwTTM5OSAyNjBMNDA5IDI1OSIgc3Ryb2tlPSIjYWUzZjM0IiBzdHJva2Utd2lkdGg9IjciLz48cGF0aCBkPSJNMzYzIDI4MFEzNzUgMjg4IDM4OCAyODAiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iNSIvPjxwYXRoIGQ9Ik0zMjEgMzA2TDM3NSAzNDRMNDI5IDMwNCIgZmlsbD0iI2JkNzU2MSIgc3Ryb2tlLXdpZHRoPSI3Ii8+PHBhdGggZD0iTTQzMyAyOTdMNTI4IDMxMEw1ODEgMjcxTDYxMiAyOTVMNTUwIDM1Mkw0NjMgMzQ4IiBmaWxsPSIjNzc1NjRkIiBzdHJva2Utd2lkdGg9IjkiLz48cGF0aCBkPSJNNTcwIDI3MEw2MDUgMjUwTDY1MCAyNjNMNjM5IDI5Mkw2MDYgMzAyWiIgZmlsbD0iI2UwYjU4ZSIgc3Ryb2tlLXdpZHRoPSI3Ii8+PHBhdGggZD0iTTYyMiAyNjRMNzA3IDIzOEw3MzAgMjQ4TDcwNSAyNjNMNjM2IDI4MloiIGZpbGw9IiM3NzcxNmMiIHN0cm9rZS13aWR0aD0iOCIvPjxwYXRoIGQ9Ik02NTAgMjU3TDY2NyAyODlMNjg2IDI4OSIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSI2Ii8+PHBhdGggZD0iTTI4MiAzMTVMMjM5IDM3MUwyNTkgNDE2IiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIwIi8+PC9nPjxnIGZpbGw9IiMzMzI4MjYiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iYm9sZCI+PHRleHQgeD0iMzUiIHk9IjYyIiBmb250LXNpemU9IjI3IiB0cmFuc2Zvcm09InJvdGF0ZSgtNCAzNSA2MikiPldBTlRFRCE8L3RleHQ+PHRleHQgeD0iNDIiIHk9IjEwMCIgZm9udC1zaXplPSIxNSI+VEhFIExPTkUgR1VOU0xJTkdFUjwvdGV4dD48L2c+PHBhdGggZD0iTTI3IDEyMEwxNDUgMTEwTTQ1IDEzMkwxNzAgMTIyTTU4MiAzNjJMNzQ1IDM1NU01OTIgMzczTDcxOCAzNzEiIHN0cm9rZT0iIzM0MmIyYSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9Ii42NSIvPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMyMjgyNiIgc3Ryb2tlLXdpZHRoPSIzIj48cGF0aCBkPSJNODUgMjkwcTE3IC0zMCAzMyAwcTIwIDI0IDM4IDBNOTQgMjg4cS0xMiAxOCAtNSAzNiIvPjxwYXRoIGQ9Ik03MTUgMTAwbDE4IC05bS01IDIzbDIwIDBtLTIwIDE0bDE3IDExIi8+PC9nPjwvc3ZnPg==");background-position:center;background-size:cover;box-shadow:0 14px 35px #180d12bb;animation:cowboyPop .6s ease both;transform-origin:center;position:relative}
+.cowboyIntroArt.back{filter:sepia(.3) brightness(.65);transform:scaleX(-1)}
+.cowboyIntroArt.glare{animation:cowboyGlare .7s ease both;filter:contrast(1.5)}
+.cowboyIntroArt.spin{animation:cowboySpinArt .7s ease both}
+.cowboyIntroArt.aim{filter:brightness(1.15)}
+@keyframes cowboySpinArt{0%{transform:rotate(-5deg) scale(.92)}45%{transform:rotate(4deg) scale(1.05)}100%{transform:rotate(0) scale(1)}}
+.cowboyOverlay.intro .cowboyBossName{font-size:clamp(40px,10vw,86px);line-height:1.1}
+</style></head><body><main><header><h1>🎲 주사위 던전</h1><p>✏️ 낙서로 그린 50개의 방</p></header>
+<section id="classSection">
+<h2>📜 모험을 떠나기 전 · 직업 선택</h2>
+<p>직업의 설명을 읽고 모험을 시작해!</p>
+<div class="classChoice"><h3>🧭 모험가 <span class="free">· 무료</span></h3>
+<p>🧥 <b>모험자의 외투</b>를 입고 시작해. 외투는 방어력이 0이지만, 적의 공격을 방어할 때 <b>완전 방어 판정이 17 이상</b>이 돼.</p>
+<p>📖 상점에 방문할 때마다 <b>가이드북</b>을 한 번 펼쳐 원하는 능력치를 <b>+2</b> 올릴 수 있어. 단, <b>행운은 +1</b>만 올라가.</p>
+</div>
+<button class="primary" onclick="chooseAdventurer()">🧭 모험가 선택 · 모험 떠나기</button>
+</section>
+<section><div class="top"><strong id="location">🚪 1 / 50번 방</strong><span class="pill" id="coins">🪙 20</span><span class="pill" id="equipment">🗡️ 나무 검 · 🧥 천옷</span></div><div style="margin-top:13px"><div class="top"><strong id="hpLabel">❤️ 40 / 40</strong><span class="muted" id="classLabel">모험가</span></div><div class="bar"><div id="hpbar" style="width:100%"></div></div></div><div class="stats" id="stats"></div></section>
+<div id="stageFx" class="hidden" aria-live="polite"></div><section id="eventSection" class="hidden"><div class="eventCard"><div class="eventArt" id="eventArt"></div><h2 id="eventTitle"></h2><p id="eventText"></p><div id="eventDice"></div><div class="eventButtons" id="eventButtons"></div></div></section><section id="battleSection"><div class="top"><h2 id="enemyTitle">👹 적 등장</h2><span class="pill" id="enemyHp">❤️ 0 / 0</span></div><div class="arena" id="arena"></div><div id="turnIndicator">✏️ 내 차례 · 행동을 골라줘</div><div class="battleinfo"><span id="distance">거리: 0칸</span><span id="range">⚔️ 공격 사거리 1칸</span></div><div class="notice" id="battleNotice" style="margin:12px 0">전투를 시작합니다.</div><div class="buttons" id="actions"><button class="primary" onclick="attack()"><svg class="uiIcon" viewBox="0 0 24 24"><path d="M4 12h16"/></svg> 공격</button><button class="secondary" onclick="toggleInventory()"><svg class="uiIcon" viewBox="0 0 24 24"><path d="M4 12h16"/></svg> 장비 보기</button><button class="secondary" onclick="showConsumables()"><svg class="uiIcon" viewBox="0 0 24 24"><path d="M4 12h16"/></svg> 아이템 사용</button><button onclick="showMove()"><svg class="uiIcon" viewBox="0 0 24 24"><path d="M4 12h16"/></svg> 이동</button></div><div id="subpanel" class="hidden" style="margin-top:12px"></div></section>
+<section id="shopSection" class="hidden"><div class="top"><h2>🏪 떠돌이 상인</h2><span class="pill">구매 시 즉시 재입고</span></div><div class="merchantScene"><div class="merchantPortrait"><svg viewBox="0 0 120 120" aria-label="손그림 상점 주인" role="img"><g stroke="#49362b" stroke-width="3.3" stroke-linejoin="round" stroke-linecap="round"><path d="M20 116 Q19 79 44 74L80 74Q103 85 105 116Z" fill="#b56d4b"/><path d="M42 77L59 100 81 77" fill="#e5c39b"/><path d="M37 40Q38 18 63 18Q88 18 87 43L83 70Q63 91 43 69Z" fill="#edc59b"/><path d="M31 38L34 23 48 17 60 6 73 17 90 22 94 37Z" fill="#6d5c92"/><path d="M25 37Q62 27 98 37" fill="none"/><path d="M45 50Q52 46 57 51M68 51Q75 46 82 51" fill="none"/><path d="M55 67Q64 75 74 65" fill="none"/><path d="M45 72Q62 91 81 72" fill="#805038"/><path d="M87 91L104 78 112 86 101 103" fill="#edc59b"/></g><circle cx="52" cy="52" r="2.4" fill="#352923"/><circle cx="75" cy="52" r="2.4" fill="#352923"/></svg></div><div class="merchantSpeech"><b>모리스의 잡화점</b><span>“어서 와! 좋은 물건 세 개 골라 놨지. 들어오면 체력 절반을 회복해 줘! 사면 새 물건을 꺼내줄게!”</span></div></div><div class="shoprow" id="shopItems"></div><div id="weaponExchange"></div><div id="guidebook"></div><div style="margin-top:12px" class="buttons"><button onclick="showConsumables()">🧪 회복 아이템 사용</button><button class="primary" onclick="leaveShop()">🚪 다음 방으로</button></div><div id="shopPanel" style="margin-top:10px"></div></section>
+<section id="endSection" class="hidden"><div id="deathBadge" class="deathBadge"></div><h2 id="endTitle"></h2><p id="endMessage"></p><button class="primary" type="button" onclick="restart()">처음부터 다시 시작</button></section>
+<section class="logSection"><div class="top"><h2>전투 기록</h2><button class="logToggle" onclick="toggleFullLog()" id="logToggle">자세히 보기</button></div><div class="log" id="log"></div></section><div class="footer">실험용 버전 · 모험가 직업 시험판 · 웹사이트에 게시되지 않음 · 진행 상황은 브라우저에 자동 저장</div></main>
+<script>
+'use strict';
+const icons={
+ sword:'<path d="M5 19l5-5m-3 8l-4-4m7-7L20 2l2 2-9 10-4 1-1-4z"/>',
+ bag:'<rect x="4" y="8" width="16" height="13" rx="3"/><path d="M9 8V6a3 3 0 0 1 6 0v2M9 14h6"/>',
+ potion:'<path d="M9 2h6m-5 0v6l-5 7a5 5 0 0 0 4 7h6a5 5 0 0 0 4-7l-5-7V2M7 15h10"/>',
+ walk:'<circle cx="14" cy="4" r="2"/><path d="M9 21l3-7-3-3-3 3m3-3 4-3 3 4 4 1m-8 1 6 7"/>',
+ next:'<path d="M4 12h15m-6-6 6 6-6 6"/>',
+ coin:'<circle cx="12" cy="12" r="9"/><path d="M12 6v12m4-9c-3-2-8-1-8 2s8 1 8 4-5 4-8 2"/>',
+ shield:'<path d="M12 2 21 6v6c0 6-4 9-9 10-5-1-9-4-9-10V6z"/>',
+ eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'
+};
+function uiIcon(k){return `<svg class="uiIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[k]||icons.eye}</svg>`}
+const catalog=[{id:'lifeseed',name:'생명의 씨앗',desc:'최대 체력 +5, 현재 체력도 5 회복',price:38,type:'maxhp',power:5},{id:'boots',name:'여행자 부츠',desc:'이동할 때 최대 2칸 이동 가능 · 영구 장착',price:34,type:'boots',power:2},{id:'potion',name:'🍎 사과',desc:'체력 8 회복',price:9,type:'heal',power:8},{id:'soup',name:'🍲 따뜻한 수프',desc:'체력 15 회복',price:18,type:'heal',power:15},{id:'blade',name:'⚔️ 철 검',desc:'물리 공격 +3',price:35,type:'weapon',power:3,range:1},{id:'longsword',name:'장검',desc:'사거리 2칸 · 물리 공격 +2',price:32,type:'weapon',power:2,range:2},{id:'bow',name:'🏹 사냥꾼 활',desc:'원거리 공격 가능 · 물리 공격 +1',price:40,type:'weapon',power:1,range:6},{id:'armor',name:'🛡️ 쇠 갑옷',desc:'방어력 +2',price:28,type:'armor',power:2},{id:'charm',name:'🍀 행운 부적',desc:'행운 +2 (최대 18)',price:32,type:'stat',stat:'luck',power:2},{id:'orb',name:'✨ 마력 수정',desc:'마법 +2',price:27,type:'stat',stat:'magic',power:2},{id:'heart',name:'💚 생명의 돌',desc:'활력 +2',price:25,type:'stat',stat:'vitality',power:2},{id:'strength',name:'💪 힘의 휘장',desc:'힘 +2',price:26,type:'stat',stat:'strength',power:2},{id:'bomb',name:'💥 충격 구슬',desc:'적에게 고정 피해 8 · 턴 유지',price:20,type:'active',power:8},{id:'wand',name:'🪄 마법 지팡이',desc:'마법 공격 D12 + 마법 · 사거리 6',price:38,type:'magicweapon',power:0,range:6},{id:'dagger',name:'🗡️ 단검',desc:'물리 공격 +2 · 사거리 1칸',price:18,type:'weapon',power:2,range:1},{id:'spear',name:'🔱 창',desc:'물리 공격 +4 · 사거리 3칸',price:49,type:'weapon',power:4,range:3},{id:'axe',name:'🪓 전투 도끼',desc:'물리 공격 +6 · 사거리 1칸',price:58,type:'weapon',power:6,range:1},{id:'crossbow',name:'🏹 석궁',desc:'물리 공격 +4 · 사거리 6칸',price:69,type:'weapon',power:4,range:6},{id:'revolver',name:'🔫 권총',desc:'물리 공격 +6 · 사거리 2칸',price:75,type:'weapon',power:6,range:2},{id:'katana',name:'⚔️ 카타나',desc:'물리 공격 +7 · 사거리 1칸',price:84,type:'weapon',power:7,range:1},{id:'warhammer',name:'🔨 전쟁 망치',desc:'물리 공격 +9 · 사거리 1칸',price:110,type:'weapon',power:9,range:1},{id:'stafffire',name:'🔥 화염 지팡이',desc:'마법 공격 +5 · 사거리 5칸',price:100,type:'magicweapon',power:5,range:5}];
+function itemIcon(id){
+ const shapes={
+ lifeseed:'<path d="M12 21Q2 14 7 6Q10 2 12 7Q17 0 21 7Q25 16 12 21Z" fill="#e29c77"/><path d="M12 18V5M12 12Q7 7 4 8M12 10Q17 5 20 7" fill="none"/>',
+ boots:'<path d="M13 2v10l7 4v5H3v-5l6-2V2z" fill="#9bbbd9"/><path d="M3 18h17" fill="none"/>',
+ potion:'<path d="M12 8Q6 3 3 10Q0 18 8 21Q11 22 12 20Q17 24 21 17Q25 7 17 7Q14 7 12 8Z" fill="#d85b48"/><path d="M12 9Q10 5 13 2" fill="none"/><path d="M12 5Q16 1 20 4Q17 8 12 7" fill="#78a45a"/>',
+ soup:'<path d="M3 10h18l-3 9H6z" fill="#e4b474"/><path d="M7 5q-3 2 0 4m5-5q-3 2 0 5m5-4q-3 2 0 4" fill="none"/>',
+ blade:'<path d="M4 20l5-5M7 22l-5-5M10 14L20 2l2 2-10 12z" fill="#b5cbd3"/>',
+ longsword:'<path d="M4 21l5-5m-2 7-5-5M11 15 20 1l3 3-9 13z" fill="#aabecb"/>',
+ bow:'<path d="M8 2q20 10 0 20M8 2v20M6 12h16m-4-3 4 3-4 3" fill="none"/>',
+ armor:'<path d="M7 3 3 8l3 4v9h12v-9l3-4-4-5-5 3z" fill="#aab7c9"/>',
+ charm:'<path d="M12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9z" fill="#a8cf85"/>',
+ orb:'<circle cx="12" cy="12" r="9" fill="#bca9e8"/><path d="M6 12q6-10 12 0" fill="none"/>',
+ heart:'<path d="M12 21 3 12Q-1 5 6 4q4-1 6 4 2-5 6-4 7 1 3 8z" fill="#9ccca1"/>',
+ strength:'<path d="M3 15q5-7 8-3l3-5 6 2-3 10H5z" fill="#d6ad79"/>',
+ bomb:'<circle cx="11" cy="14" r="8" fill="#c4a5bd"/><path d="M12 6l3-4 4 2" fill="none"/>',
+ dagger:'<path d="M5 21l5-5m-4 7-4-4M10 16L19 3l3 3-10 12z" fill="#c2d0d7"/>',
+ spear:'<path d="M4 21L18 7m-2-3 4-3 2 5-5 4z" fill="#b4c4cb"/>',
+ axe:'<path d="M6 22 16 4M13 3Q21 1 23 8l-8 5-5-5z" fill="#b2c4c9"/>',
+ crossbow:'<path d="M2 8Q12 1 22 8M2 8l20 0M12 6v16m-3-3 3 3 3-3" fill="#b18b58"/>',
+ revolver:'<path d="M2 8h17v5H9l-2 8H3l2-10H2z" fill="#adb8c2"/>',
+ katana:'<path d="M3 21l6-6m-5 8-3-3M10 15Q20 6 21 2l2 1Q20 11 12 17z" fill="#c7cbd8"/>',
+ warhammer:'<path d="M5 22 15 6M9 3h13v7H9z" fill="#adb7c3"/>',
+ stafffire:'<path d="M5 22 16 8M16 9Q8 4 16 1q7 4 3 9z" fill="#ed8755"/>',
+  wand:'<path d="M4 21 19 6M17 2l1 4 4 1-4 2-1 4-2-4-4-2 4-1z" fill="#c3a6dd"/>'
+ };
+ return `<svg class="itemIcon" viewBox="0 0 24 24" fill="none" stroke="#554638" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${shapes[id]||shapes.charm}</svg>`;
+}
+const fresh=()=>({room:1,cleared:0,hp:60,maxHp:60,coins:20,stats:{strength:0,luck:0,defense:0,magic:0,vitality:0},weapon:{name:'나무 검',power:0,range:1,type:'weapon'},armor:'모험자의 외투',job:'adventurer',guideUsed:{},weaponBag:[],moveRange:1,selectedEnemy:0,enemies:[],inventory:[{id:'potion',qty:2}],enemy:null,playerPos:0,enemyPos:3,phase:'choose',shop:[],logs:[],weather:'day',eventSchedule:{},eventDone:{},event:null,knightFight:false,guarding:false});
+let s;try{s=JSON.parse(localStorage.getItem('dice-dungeon-guard-layout-test-v1'))||fresh()}catch(e){s=fresh()}
+const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
+const item=id=>catalog.find(x=>x.id===id);
+function giveItem(id){const it=item(id);if(!it)return;
+ if(it.type==='weapon'||it.type==='magicweapon'){s.weaponBag.push({name:it.name.replace(/^[^가-힣A-Za-z]+\s*/,''),power:it.power,range:it.range,type:it.type});log(`${it.name}을 무기 보관함에 넣었다. 상점에서 장착할 수 있다.`);}
+ else if(it.type==='armor'){s.stats.defense+=it.power;log(`방어력 +${it.power}`);}
+ else if(it.type==='maxhp'){s.maxHp+=it.power;s.hp+=it.power;log(`최대 체력 +${it.power}`);}
+ else if(it.type==='stat'){s.stats[it.stat]=it.stat==='luck'?Math.min(18,s.stats.luck+it.power):s.stats[it.stat]+it.power;}
+ else{let slot=s.inventory.find(x=>x.id===id);if(slot)slot.qty++;else s.inventory.push({id,qty:1});}
+}
+function ensureEventState(){s.eventSchedule??={};s.eventDone??={};s.weather??='day';s.knightFight??=false;}
+function eventBlock(room){return Math.floor((room-1)/5);}
+function eventKindForBlock(b){const kinds=b<4?['berry','knight']:['berry','knight','weather'];return kinds[rand(0,kinds.length-1)];}
+function scheduledEvent(room){ensureEventState();const b=eventBlock(room);if(!s.eventSchedule[b])s.eventSchedule[b]={room:b*5+rand(1,5),kind:eventKindForBlock(b)};
+if(b<4&&s.eventSchedule[b].kind==='weather')s.eventSchedule[b].kind=eventKindForBlock(b);
+return s.eventSchedule[b].room===room&&!s.eventDone[b]?s.eventSchedule[b].kind:null;}
+function beginRoom(){if(s.room===25&&!s.cowboyDone){startCowboy();return;}const kind=scheduledEvent(s.room);if(kind){s.event={kind,step:'start',message:''};s.phase='event';s.enemies=[];s.enemy=null;log(`${s.room}번 방에서 특별 상황 발견!`);}else spawn();render();}
+function finishEvent(next='battle'){ensureEventState();s.eventDone[eventBlock(s.room)]=true;s.event=null;if(next==='battle')spawn();render();}
+const save=()=>{try{localStorage.setItem('dice-dungeon-guard-layout-test-v1',JSON.stringify(s))}catch(e){}};
+function log(msg){s.logs.unshift(msg);s.logs=s.logs.slice(0,35)}
+function boardSize(){return s.cleared>=10?6:4}
+function activeEnemies(){return s.enemies||[]}
+function aliveEnemies(){return activeEnemies().filter(e=>e.hp>0)}
+function nearestEnemy(){
+ return [...aliveEnemies()].sort((a,b)=>Math.abs(a.pos-s.playerPos)-Math.abs(b.pos-s.playerPos)||a.hp-b.hp||a.id-b.id)[0]||null;
+}
+function autoLock(){const e=nearestEnemy();s.selectedEnemy=e?e.id:0;s.enemy=e;return e}
+function selected(){let alive=aliveEnemies();return alive.find(e=>e.id===s.selectedEnemy)||nearestEnemy()||null}
+function distance(e=selected()){return e?Math.abs(e.pos-s.playerPos):0}
+function selectEnemy(id){if(busy||s.phase!=='battle')return;let e=aliveEnemies().find(x=>x.id===id);if(e){s.selectedEnemy=id;render();notice(`${e.name} 선택 · 거리 ${distance(e)}칸 · 체력 ${e.hp}`)}}
+function spawn(){
+ const late=s.cleared>=10, n=boardSize();
+ const pool=late?['goblin','wolf','speed','ranger','archer','fierce']:['goblin','wolf'];
+ const spawnRoll=Math.random();
+ const count=s.room<20?1:(spawnRoll<0.40?1:spawnRoll<0.85?2:3);
+ const positions=Array.from({length:n-1},(_,i)=>i+1);
+ s.enemies=[];
+ for(let i=0;i<count&&positions.length;i++){
+  let kind=Math.random()<.075?'gold':pool[rand(0,pool.length-1)];if(s.weather==='blood'&&['wolf','fierce'].includes(kind))kind='werewolf';
+  let ix=rand(0,positions.length-1),pos=positions.splice(ix,1)[0];
+  let names={goblin:'고블린',wolf:'던전 늑대',speed:'스피드 고블린',ranger:'레인저 고블린',archer:'해골 궁수',gold:'골드 고블린',fierce:'사나운 늑대',werewolf:'늑대인간'};
+  let hp=7+Math.floor(s.cleared*1.05)+rand(0,2)+(kind==='fierce'?6:kind==='werewolf'?10:0);
+  let damage=4+Math.floor(s.cleared*.35)+(kind==='fierce'?5:kind==='werewolf'?6:0);
+  if(kind==='archer')damage=Math.max(1,Math.floor(damage*0.6)); // 해골 궁수 공격력 40% 감소
+  let range=kind==='archer'?6:kind==='ranger'?2:1;
+  s.enemies.push({id:i+1,kind,name:names[kind],hp,maxHp:hp,damage,range,speed:['speed','fierce','werewolf'].includes(kind)?2:1,pos,goldBonus:kind==='gold'?rand(22,38)+Math.floor(s.cleared/2):0});
+ }
+ s.playerPos=0;s.phase='battle';autoLock();
+ log(`${s.room}번 방! 적 ${s.enemies.length}마리 등장: ${s.enemies.map(e=>e.name).join(', ')}.`);
+}
+if(!s.moveRange)s.moveRange=1;if(!Array.isArray(s.weaponBag))s.weaponBag=[];
+ensureEventState();
+if(s.phase==='event'&&!s.event){s.phase='battle';s._needsRoomStart=true;}
+if(s.phase==='battle'&&(!Array.isArray(s.enemies)||!s.enemies.length)){
+ if(s.enemy&&s.enemy.hp>0){s.enemy.id=1;s.enemy.pos=s.enemyPos??boardSize()-1;s.enemy.kind=s.enemy.kind||'goblin';s.enemy.speed=s.enemy.speed||1;s.enemy.range=s.enemy.range||(s.enemy.ranged?6:1);s.enemies=[s.enemy];s.selectedEnemy=1;}
+ else {s.enemies=[];s.enemy=null;s._needsRoomStart=true;}
+}
+if(!Array.isArray(s.enemies))s.enemies=[];if(s.phase==='battle')autoLock();
+function notice(msg){document.getElementById('battleNotice').innerHTML=msg}
+function roll(){return rand(1,20)}
+function defenseTarget(){return (s.job==='adventurer'&&s.armor==='모험자의 외투'?17:15)-(s.guarding?2:0);}
+function defenseSuccess(rollValue){return (rollValue>1||s.guarding)&&rollValue+s.stats.luck>=defenseTarget();}
+async function guard(){
+ if(s.phase!=='battle'||busy)return;
+ setBusy(true);closePanels();
+ s.guarding=true;
+ notice('🛡️ 방어 자세! 이번 적의 턴에 완전 방어 목표 -2 · 주사위 1도 성공 가능');
+ log('방어 행동 사용: 한 턴 소비, 완전 방어 목표 -2.');
+ render();
+ await sleep(220);
+ await enemyTurn();
+ s.guarding=false;
+ render();setBusy(false);
+}
+function chooseAdventurer(){s=fresh();s.job='adventurer';s.phase='battle';beginRoom();render();}
+let busy=false;let fullLog=false;function toggleFullLog(){fullLog=!fullLog;document.getElementById('logToggle').textContent=fullLog?'간단히 보기':'자세히 보기';render();}
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+function setBusy(v){busy=v;document.getElementById('actions').classList.toggle('busy',v);document.getElementById('subpanel').classList.toggle('busy',v);document.getElementById('turnIndicator').textContent=v?'⏳ 주사위와 전투 연출 진행 중…':'✏️ 내 차례 · 행동을 골라줘';}
+function fxShow(title,detail='',rolling=false,num='?'){
+ const el=document.getElementById('stageFx');el.classList.remove('hidden');
+ el.innerHTML=`<div class="fxcaption">${title}</div><div class="d20wrap ${rolling?'rolling':'stop'}"><svg viewBox="0 0 100 108" aria-label="20면체 주사위"><path d="M50 3 L94 32 L78 89 L50 105 L22 89 L6 32Z" fill="#fdf0c7" stroke="#3e3027" stroke-width="4" stroke-linejoin="round"/><path d="M50 3L29 37L6 32M50 3L71 37L94 32M29 37L71 37L50 78Z M6 32L29 37L22 89L50 105L50 78L78 89L71 37L94 32" fill="none" stroke="#9d7a55" stroke-width="2.5" stroke-linejoin="round"/><path d="M29 37L50 78L22 89M71 37L50 78L78 89" fill="none" stroke="#9d7a55" stroke-width="2"/><text x="50" y="59" text-anchor="middle" font-size="29" font-weight="1000" fill="#352c25">${num}</text></svg></div><div class="fxdetail">${detail}</div>`;
+}
+function fxHide(){document.getElementById('stageFx').classList.add('hidden')}
+function animateSprite(cls){let a=document.getElementById('arena');a.classList.remove('hero-strike','enemy-strike','hero-block','enemy-hit','hero-hit');void a.offsetWidth;a.classList.add(cls)}
+function hitBurst(which='enemy',blocked=false){
+ const arena=document.getElementById('arena'),c=arena.querySelector('.cell.'+which);if(!c)return;
+ const burst=document.createElement('div');burst.className='hitBurst'+(blocked?' blocked':'');
+ burst.innerHTML=blocked?
+ '<svg viewBox="0 0 80 80" aria-hidden="true"><path d="M40 7L68 20V47Q60 65 40 74Q20 65 12 47V20Z" fill="#bde5ed" stroke="#427f96" stroke-width="5"/><path d="M26 39L36 49L55 27" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/></svg>':
+ '<svg viewBox="0 0 80 80" aria-hidden="true"><path d="M14 63L59 13M28 70L70 27" fill="none" stroke="#ffe0a0" stroke-width="12" stroke-linecap="round"/><path d="M14 63L59 13M28 70L70 27" fill="none" stroke="#a74730" stroke-width="4" stroke-linecap="round"/></svg>';
+ burst.style.left=(c.offsetLeft+c.offsetWidth/2)+'px';burst.style.top=(c.offsetTop+c.offsetHeight*.48)+'px';
+ arena.appendChild(burst);setTimeout(()=>burst.remove(),620);
+}
+function floatNumber(value,which='enemy',kind='damage'){
+ const a=document.getElementById('arena');
+ const c=a.querySelector('.cell.'+which);
+ if(!c)return;
+ const rect=c.getBoundingClientRect();
+ const n=document.createElement('div');
+ n.className='floatingDamage '+(kind==='damage'?'':kind);
+ n.textContent=value;
+ n.style.left=(rect.left+rect.width/2-15)+'px';
+ n.style.top=(rect.top+10)+'px';
+ document.body.appendChild(n);
+ setTimeout(()=>n.remove(),1250);
+}
+async function rollScene(title,detail=''){
+ fxShow(title,detail,true,'?');await sleep(280);const r=roll();fxShow(title,detail,false,r);await sleep(260);return r;
+}
+async function enemyTurn(){
+ if(s.phase!=='battle')return;
+ if(s.boss?.active){await cowboyTurn();return;}
+ document.getElementById('turnIndicator').textContent='적의 차례';
+ for(const e of [...aliveEnemies()]){
+  if(s.phase!=='battle')break;
+  const d=distance(e);
+  if(d>e.range){
+   const occupied=new Set(aliveEnemies().filter(x=>x.id!==e.id).map(x=>x.pos));
+   const direction=e.pos>s.playerPos?-1:1;
+   let moved=0;
+   for(let k=0;k<(e.speed||1);k++){
+    const next=e.pos+direction;
+    if(next===s.playerPos||occupied.has(next)||next<0||next>=boardSize())break;
+    e.pos=next;moved++;
+   }
+   if(moved){autoLock();log(`${e.name}: ${moved}칸 접근.`);notice(`${e.name}이(가) ${moved}칸 접근!`);render();await sleep(190);}
+   if(e.kind!=='speed'||distance(e)>e.range)continue;
+   notice('스피드 고블린이 이동 직후 공격!');
+  }
+  notice(`${e.name}의 공격! 방어 주사위를 굴려!`);
+  animateSprite('enemy-strike');
+  await sleep(100);
+  const r=await rollScene('방어 주사위',`목표 ${defenseTarget()} · 행운 +${s.stats.luck}`);
+  const total=r+s.stats.luck;
+  if(defenseSuccess(r)){
+   animateSprite('hero-block');hitBurst('player',true);floatNumber('방어!','player','block');
+   log(`${e.name} 공격 방어! D20 ${r} + 행운 ${s.stats.luck} = ${total}`);
+   notice(`${e.name} 공격 완전 방어! ${r}+${s.stats.luck}=${total}`);
+  }else{
+   const damage=Math.max(0,e.damage+(s.weather==='night'?2:0)-s.stats.defense); // 낮에는 날씨 공격력 보정 없음
+   s.hp=Math.max(0,s.hp-damage);
+   animateSprite('hero-hit');if(s.hp>0)hitBurst('player');floatNumber('-'+damage,'player');
+   log(`${e.name} 공격! 방어 실패 (${r}+${s.stats.luck}=${total}). 날씨 보정 포함 ${damage} 피해.`);
+   notice(`${e.name} 공격! <strong>체력 -${damage}</strong>`);
+   if(s.hp<=0){await playerDeath();}
+  }
+  render();await sleep(220);fxHide();
+ }
+ if(s.phase==='battle'){autoLock();render();}
+}
+const skullSVG=`<svg viewBox="0 0 64 72" aria-hidden="true"><g stroke="#554637" stroke-width="3" stroke-linejoin="round"><path d="M13 44Q4 35 9 23Q15 5 32 6Q49 5 55 23Q60 35 51 44L48 56H16Z" fill="#f5e9cb"/><path d="M19 32Q19 23 27 28L27 38 19 38Z M45 32Q45 23 37 28L37 38 45 38Z" fill="#554637"/><path d="M32 38l-5 9h10z" fill="#947f6b"/><path d="M21 55v9m8-9v10m8-10v10m7-10v9" fill="none"/></g></svg>`;
+function deathEffect(which='enemy',id=null){
+ const arena=document.getElementById('arena');
+ const cell=id===null?arena.querySelector('.cell.'+which):arena.querySelector(`.cell[data-enemy-id="${id}"]`);
+ if(!cell)return;
+ const ghost=document.createElement('div');ghost.className='deathGhost';
+ ghost.style.left=(cell.offsetLeft+cell.offsetWidth/2)+'px';
+ ghost.style.top=(cell.offsetTop+cell.offsetHeight/2)+'px';
+ ghost.innerHTML=`<span class="deathDust"></span><span class="deathSkull">${skullSVG}</span>`;
+ arena.appendChild(ghost);
+ cell.classList.add('dying');
+ setTimeout(()=>ghost.remove(),1050);
+}
+async function playerDeath(){
+ if(s.phase==='dead')return;
+ s.hp=0;log('모험가가 쓰러졌어.');
+ fxHide();deathEffect('player');
+ notice('모험가가 쓰러졌어…');
+ await sleep(850);
+ s.phase='dead';render();
+}
+function defeatEnemy(e){
+ if(e.hp>0)return false;
+ if(e.kind==='cowboy'){startCowboyFinale();return true;}
+ e.hp=0;deathEffect('enemy',e.id);log(`${e.name} 처치!`);
+ if(e.goldBonus){s.coins+=e.goldBonus;log(`골드 고블린 추가 보상 +${e.goldBonus} 코인!`);notice(`골드 고블린 처치! 보너스 ${e.goldBonus} 코인!`);}
+ if(!aliveEnemies().length){win();return true;}
+ autoLock();return false;
+}
+function win(){
+ let gain=rand(8,15)+Math.floor(s.room/4);
+ s.coins+=gain;s.cleared++;
+ log(`${s.room}번 방 클리어! 기본 보상 ${gain} 코인.`);
+ s.enemy=null;s.enemies=[];
+ if(s.knightFight){s.knightFight=false;const loot=['blade','longsword','armor','charm','lifeseed','soup'][rand(0,5)];giveItem(loot);log(`기사 전리품 확정 획득: ${item(loot).name}!`);}
+ if(s.cleared>=50){s.phase='victory';notice('던전 정복!')}
+ else if(s.cleared%5===0){
+  s.phase='shop';s.shop=newShopStock();
+  const recovered=Math.min(s.maxHp-s.hp,Math.ceil(s.maxHp/2));s.hp+=recovered;
+  log(`상점 도착! 체력 ${recovered} 회복.`);
+ }else{s.phase='cleared';notice(`승리! ${gain} 코인 획득. 다음 방으로!`)}
+}
+async function attack(){
+ if(s.phase!=='battle'||busy)return;
+ const e=selected();if(!e)return;
+ const w=s.weapon;
+ if(distance(e)>w.range){notice(`${e.name}까지 ${distance(e)}칸 · ${w.name} 사거리 ${w.range}칸! 이동하거나 다른 적을 선택해.`);return;}
+ setBusy(true);closePanels();notice(`${e.name}에게 ${w.name} 공격!`);animateSprite('hero-strike');
+ const r=await rollScene('공격 주사위',w.type==='magicweapon'?'마법 D12':'D20 · 힘 보정');
+ const magic=w.type==='magicweapon',mr=magic?rand(1,12):0;
+ const damage=Math.max(0,magic?mr+s.stats.magic+w.power:r+s.stats.strength+w.power);
+ fxHide();animateSprite('enemy-hit');
+ e.hp=Math.max(0,e.hp-damage);
+ if(e.hp>0)hitBurst('enemy');floatNumber('-'+damage,'enemy');
+ const detail=magic?`D12 ${mr} + 마법 ${s.stats.magic} + 무기 ${w.power}`:`D20 ${r} + 힘 ${s.stats.strength} + 무기 ${w.power}`;
+ log(`${e.name}에게 ${damage} 피해! (${detail})`);notice(`${e.name} <strong>-${damage} HP</strong> (${detail})`);
+ if(e.hp===0)defeatEnemy(e);
+ else if(e.kind==='cowboy')cowboyPhaseCheck();
+ render();await sleep(170);
+ if(s.phase==='battle')await enemyTurn();
+ render();setBusy(false);
+}
+async function move(dir,steps=1){
+ if(s.phase!=='battle'||busy)return;
+ steps=Math.max(1,Math.min(steps,s.moveRange||1));
+ let next=s.playerPos;
+ const occupied=new Set(aliveEnemies().map(e=>e.pos));
+ let jumped=0;
+ for(let i=0;i<steps;i++){
+  const candidate=next+dir;
+  if(candidate<0||candidate>=boardSize())break;
+  if(occupied.has(candidate)){
+   // 적이 바로 앞을 막고 있으면 그 뒤 빈 칸으로 뛰어넘는다.
+   const landing=candidate+dir;
+   if(landing<0||landing>=boardSize()||occupied.has(landing))break;
+   next=landing;jumped++;
+  }else next=candidate;
+ }
+ if(next===s.playerPos){notice('그 방향으로 이동할 수 없어.');return;}
+ setBusy(true);const moved=Math.abs(next-s.playerPos);s.playerPos=next;
+ log(jumped?`적 ${jumped}마리를 뛰어넘어 ${dir>0?'앞':'뒤'}으로 이동!`:`${dir>0?'앞':'뒤'}으로 ${moved}칸 이동.`);autoLock();closePanels();render();notice(jumped?`적을 뛰어넘었다! (${moved}칸 이동)`:`${moved}칸 이동!`);
+ await sleep(170);await enemyTurn();render();setBusy(false);
+}
+function showMove(){
+ if(busy)return;
+ let p=document.getElementById('subpanel');document.body.appendChild(p);p.classList.remove('hidden');p.dataset.mode='move';
+ const range=s.moveRange||1;
+ p.innerHTML=`<div class="notice">적을 향해 이동하면 바로 뒤의 빈 칸으로 뛰어넘을 수 있어! 이동하면 적의 턴이 시작돼. 부츠 장착 시 한 번에 최대 ${range}칸 이동 가능!</div><div class="buttons" style="margin-top:8px">
+ ${Array.from({length:range},(_,i)=>`<button onclick="move(-1,${i+1})">뒤로 ${i+1}칸</button><button onclick="move(1,${i+1})">앞으로 ${i+1}칸</button>`).join('')}</div><button class="secondary moveCancel" onclick="closePanels()" style="width:100%;margin-top:8px">✖ 취소 · 이동하지 않기</button>`;
+}
+function showSpecial(){
+ if(busy)return;
+ const p=document.getElementById('subpanel');
+ if(!p.classList.contains('hidden')&&p.dataset.mode==='special'){closePanels();return;}
+ p.classList.remove('hidden');p.dataset.mode='special';
+ p.innerHTML='<h2>✨ 특수 행동</h2><div class="buttons"><button onclick="toggleInventory()">🎒 아이템 보기</button><button onclick="showConsumables()">🍎 아이템 사용</button></div><button onclick="closePanels()" style="margin-top:7px">닫기</button>';
+}
+function toggleInventory(){
+ if(busy)return;
+ let p=document.getElementById('subpanel');
+ if(!p.classList.contains('hidden')&&p.dataset.mode==='inventory'){closePanels();return;}
+ p.dataset.mode='inventory';p.classList.remove('hidden');
+ let html=`<h2>소지품 · 확인은 턴 소모 없음</h2><div class="items">
+ <div class="item">${itemIcon('blade')}<strong>${s.weapon.name}</strong><div>사거리 ${s.weapon.range}칸 · 공격 +${s.weapon.power}</div></div>
+ <div class="item">${itemIcon('armor')}<strong>${s.armor}</strong><div>방어력 ${s.stats.defense}</div></div>
+ <div class="item">${itemIcon('boots')}<strong>${s.moveRange>1?'여행자 부츠 장착':'기본 신발'}</strong><div>한 턴 이동 최대 ${s.moveRange||1}칸</div></div>`;
+ for(let x of s.inventory){let it=item(x.id);if(it)html+=`<div class="item">${itemIcon(it.id)}<strong>${it.name} × ${x.qty}</strong><div>${it.desc}</div></div>`}
+ html+='</div><button class="secondary" onclick="closePanels()" style="margin-top:9px">닫기</button>';p.innerHTML=html;
+}
+function showConsumables(){
+ if(busy)return;
+ let inShop=s.phase==='shop',p=document.getElementById(inShop?'shopPanel':'subpanel');
+ if(!inShop){p.classList.remove('hidden');p.dataset.mode='use';}
+ let inv=s.inventory.filter(x=>item(x.id)&&['heal','active'].includes(item(x.id).type));
+ p.innerHTML=`<h2>아이템 사용</h2><div class="items">${inv.length?inv.map(x=>{let it=item(x.id);return `<div class="item">${itemIcon(it.id)}<strong>${it.name} × ${x.qty}</strong><div>${it.desc}</div><button onclick="useItem('${x.id}')">사용</button></div>`}).join(''):'<p class="muted">사용 가능한 아이템이 없어.</p>'}</div>${inShop?'':'<button class="secondary" onclick="closePanels()" style="margin-top:9px">닫기</button>'}`;
+}
+async function useItem(id){
+ if(busy)return;
+ let it=item(id),slot=s.inventory.find(x=>x.id===id);
+ if(!it||!slot||slot.qty<=0||!['battle','shop'].includes(s.phase))return;
+ if(it.type==='heal'&&s.hp===s.maxHp){notice('체력이 가득 차 있어.');return;}
+ const battle=s.phase==='battle';if(battle)setBusy(true);
+ slot.qty--;if(slot.qty<=0)s.inventory=s.inventory.filter(x=>x.qty>0);
+ if(it.type==='heal'){
+  const amount=Math.min(s.maxHp-s.hp,it.power+s.stats.vitality);s.hp+=amount;
+  log(`${it.name} 사용 · 체력 ${amount} 회복.`);
+  if(battle){notice(`체력 +${amount}! 적의 차례.`);floatNumber('+'+amount,'player','heal');render();await sleep(160);await enemyTurn();}
+ }else if(it.type==='active'&&battle){
+  const e=selected();
+  if(e){e.hp=Math.max(0,e.hp-it.power);if(e.hp>0){hitBurst('enemy');floatNumber('-'+it.power,'enemy');}log(`${e.name}에게 ${it.power} 고정 피해 · 턴 유지.`);notice(`${e.name}에게 ${it.power} 피해!`);
+   if(e.hp===0)defeatEnemy(e);
+  }
+ }
+ if(s.phase==='shop')showConsumables();else closePanels();
+ render();if(battle)setBusy(false);
+}
+function eventArt(kind){
+ if(kind==='berry')return '<svg viewBox="0 0 160 110"><path d="M20 98Q-4 55 39 43Q33 10 70 29Q94 3 115 35Q155 23 143 69Q165 96 113 100Z" fill="#81aa68" stroke="#4e7049" stroke-width="4"/><g fill="#bd485c" stroke="#80364b" stroke-width="2"><circle cx="42" cy="67" r="9"/><circle cx="83" cy="47" r="9"/><circle cx="117" cy="72" r="9"/></g><g fill="#7d7cc2"><circle cx="61" cy="84" r="8"/><circle cx="99" cy="84" r="8"/></g></svg>';
+ if(kind==='knight')return doodle('knight');
+ return '<svg viewBox="0 0 160 110"><path d="M0 92Q70 55 160 92V110H0Z" fill="#7b8293"/><circle cx="84" cy="40" r="29" fill="#e4d39a" stroke="#927e73" stroke-width="4"/><path d="M70 14Q90 36 70 64Q115 50 103 23Z" fill="#9dacc2"/></svg>';
+}
+function renderEvent(){
+ const ev=s.event;if(!ev)return;
+ const titles={berry:'신비한 베리 수풀',knight:'수상한 기사',weather:'하늘의 변화'};
+ document.getElementById('eventTitle').textContent=titles[ev.kind];
+ document.getElementById('eventArt').innerHTML=eventArt(ev.kind);
+ const desc={berry:'여러 색깔의 베리가 달린 수풀이다. 먹어볼까?',knight:'낡은 갑옷을 입은 기사가 길을 막고 있다. 말을 걸거나 싸울 수 있다.',weather:'던전의 하늘이 바뀌려 한다. D20으로 낮과 밤을 결정한다.'};
+ document.getElementById('eventText').textContent=ev.message||desc[ev.kind];
+ const buttons=document.getElementById('eventButtons');
+ const button=(name,fn)=>`<button onclick="${fn}">${name}</button>`;
+ if(ev.step==='start')buttons.innerHTML=ev.kind==='berry'?button('베리를 먹는다','eventBerry()')+button('그냥 지나간다','finishEvent()'):ev.kind==='knight'?button('말을 건다','eventTalk()')+button('기사와 싸운다','fightKnight()'):button('주사위 굴리기','eventWeather()');
+ else if(ev.step==='retry')buttons.innerHTML=button('남은 베리를 먹는다','eventBerry()')+button('지나간다','finishEvent()');
+ else if(ev.step==='result')buttons.innerHTML=button('계속 진행','finishEvent()');
+ else buttons.innerHTML='<button disabled>주사위를 굴리는 중…</button>';
+ document.getElementById('eventDice').innerHTML=ev.dice?`<span class="eventResult">D20: ${ev.dice}</span>`:'';
+}
+async function eventRoll(){if(busy||s.phase!=='event')return null;busy=true;s.event.step='rolling';render();const r=await rollScene('상황 판정','D20 + 행운',);fxHide();s.event.dice=r;busy=false;return r;}
+async function eventBerry(){const r=await eventRoll();if(r===null)return;const total=r+s.stats.luck;
+ if(total>=11){const second=await eventRoll();if(second===null)return;let msg='';
+ if(second<=5){const heal=Math.min(s.maxHp-s.hp,8);s.hp+=heal;msg=`빨간 베리! 체력 ${heal} 회복.`;}
+ else if(second<=10){s.stats.defense+=1;msg='파란 베리! 방어력 +1.';}
+ else if(second<=15){s.coins+=15;msg='노란 베리! 코인 +15.';}
+ else if(second<=19){s.stats.strength+=1;msg='보라 베리! 힘 +1.';}
+ else{s.maxHp+=3;s.hp+=3;msg='황금 베리! 최대 체력 +3.';}
+ s.event.message=`첫 판정 ${r}+행운 ${s.stats.luck}=${total} 성공! 두 번째 D20 ${second}. ${msg}`;s.event.step='result';log(s.event.message);
+ }else{const second=await eventRoll();if(second===null)return;
+ const wolfAttack=second<=5||second>=11&&second<=15, wolfEat=second>=6&&second<=15;
+ let damage=0;if(wolfAttack){damage=5+Math.floor(s.cleared/5);s.hp=Math.max(0,s.hp-damage);}
+ s.event.message=`베리 판정 실패 (${r}+${s.stats.luck}=${total}). 늑대 사건 D20 ${second}: ${wolfAttack?`늑대가 공격! 피해 ${damage}. `:'늑대가 공격하지 않았다. '}${wolfEat?'늑대가 베리를 먹고 도망갔다.':'베리는 남아 있다.'}`;
+ log(s.event.message);s.event.step=wolfEat?'result':'retry';if(s.hp<=0){s.phase='dead';log('베리 수풀에서 쓰러졌다.');}
+ }render();}
+async function eventTalk(){const r=await eventRoll();if(r===null)return;const t=r+s.stats.luck;let msg='';
+ if(t<=10){const damage=t<=5?10:5;s.hp=Math.max(0,s.hp-damage);msg=`나쁜 기사였다! 기습 공격으로 체력 -${damage}. 방어 판정과 방어력은 적용되지 않는다. 기사는 떠났다.`;}
+ else if(t<=15){const heal=Math.min(s.maxHp-s.hp,rand(10,15));s.hp+=heal;msg=`착한 기사! 체력 ${heal} 회복.`;}
+ else{const loot=t>=20?['lifeseed','charm','longsword'][rand(0,2)]:['potion','soup','armor','blade'][rand(0,3)];giveItem(loot);msg=`착한 기사에게 ${item(loot).name}을(를) 받았다!`;}
+ s.event.message=`D20 ${r}+행운 ${s.stats.luck}=${t}. ${msg}`;s.event.step='result';log(s.event.message);if(s.hp<=0)s.phase='dead';render();}
+function fightKnight(){if(s.phase!=='event'||busy)return;s.eventDone[eventBlock(s.room)]=true;s.event=null;s.knightFight=true;
+ const hp=25+s.cleared*2,damage=7+Math.floor(s.cleared/5);s.playerPos=0;s.enemies=[{id:1,kind:'knight',name:'수상한 기사',hp,maxHp:hp,damage,range:1,speed:1,pos:boardSize()-1,goldBonus:0}];s.phase='battle';autoLock();log('수상한 기사와 전투 시작! 승리 시 아이템 1개 확정.');render();}
+async function eventWeather(){const r=await eventRoll();if(r===null)return;let msg='';
+ if(r+s.stats.luck>=11){s.weather='day';msg='낮이 유지된다. 적의 공격력과 시야는 정상.';}
+ else{const moon=await eventRoll();if(moon===null)return;if(moon===20){s.weather='blood';msg='블러드 문! 시야는 정상이며 늑대가 늑대인간으로 바뀐다.';}else{s.weather='night';msg='밤이 되었다! 적 공격력 +2, 시야 2칸.';}}
+ s.event.message=`날씨 주사위 ${r}. ${msg}`;s.event.step='result';log(s.event.message);render();}
+function nextRoom(){if(s.phase!=='cleared')return;s.room++;beginRoom()}
+function pick(existing=[]){
+ // 회복 아이템은 일반 아이템보다 자주 등장하지만, 진열대 3칸 중 최대 1칸만 차지한다.
+ const heals=catalog.filter(it=>it.type==='heal');
+ const others=catalog.filter(it=>it.type!=='heal');
+ const hasHeal=existing.some(id=>item(id)?.type==='heal');
+ const pool=!hasHeal&&Math.random()<.32?heals:others;
+ return pool[rand(0,pool.length-1)].id;
+}
+function newShopStock(){const stock=[];for(let i=0;i<3;i++)stock.push(pick(stock));return stock;}
+function buy(index){if(s.phase!=='shop')return;let it=item(s.shop[index]);if(!it)return;if(s.coins<it.price){document.getElementById('shopPanel').textContent='🪙 코인이 부족해!';return}s.coins-=it.price;if(it.type==='maxhp'){s.maxHp+=it.power;s.hp+=it.power;log(`최대 체력 +${it.power}!`)}else if(it.type==='boots'){s.moveRange=Math.max(s.moveRange||1,it.power);log('여행자 부츠 장착! 한 번에 2칸 이동 가능.')}else if(it.type==='weapon'||it.type==='magicweapon'){s.weaponBag.push({...s.weapon});s.weapon={name:it.name.replace(/^[^가-힣A-Za-z]+\\s*/,''),power:it.power,range:it.range,type:it.type};log(`${it.name} 장착! 이전 무기는 보관함으로 이동.`)}else if(it.type==='armor'){s.stats.defense+=it.power;s.armor=it.name.replace(/^[^가-힣A-Za-z]+\\s*/,'');log(`🛡️ ${it.name} 장착! 방어력 +${it.power}`)}else if(it.type==='stat'){let old=s.stats[it.stat];s.stats[it.stat]=it.stat==='luck'?Math.min(18,old+it.power):old+it.power;log(`${it.name} 획득! ${it.stat} +${s.stats[it.stat]-old}`)}else{let slot=s.inventory.find(x=>x.id===it.id);if(slot)slot.qty++;else s.inventory.push({id:it.id,qty:1});log(`🎒 ${it.name} 구매!`)}s.shop[index]=pick(s.shop.filter((_,i)=>i!==index));render()}
+function weaponIconId(w){
+ const name=(w?.name||'');
+ const match=catalog.find(it=>it.name.includes(name)&&['weapon','magicweapon'].includes(it.type));
+ return match?.id || (w?.type==='magicweapon'?'wand':name.includes('활')?'bow':name.includes('장검')?'longsword':'blade');
+}
+function equipStoredWeapon(index){
+ if(s.phase!=='shop'||!Array.isArray(s.weaponBag)||!s.weaponBag[index])return;
+ const old=s.weapon;s.weapon=s.weaponBag[index];s.weaponBag[index]=old;
+ log(`무기 교체: ${s.weapon.name} 장착.`);
+ render();
+}
+function sellStoredWeapon(index){
+ if(s.phase!=='shop'||!s.weaponBag?.[index])return;
+ const w=s.weaponBag.splice(index,1)[0];
+ const base=catalog.find(it=>it.name.includes(w.name)&&['weapon','magicweapon'].includes(it.type));
+ const price=Math.max(4,Math.floor((base?.price||12)*.5));
+ s.coins+=price;log(`${w.name} 판매: +${price} 코인.`);
+ render();
+}
+function renderWeaponExchange(){
+ const bag=s.weaponBag||[];
+ const weapon=s.weapon||{name:'나무 검',power:0,range:1,type:'weapon'};
+ return `<div class="exchange"><div class="top"><strong>무기 보관함 · 상점에서 교체</strong><span class="muted">장착 중: ${weapon.name}</span></div>
+ <div class="weaponCards">${bag.length?bag.map((w,i)=>`<div class="weaponCard">${itemIcon(weaponIconId(w))}<strong>${w.name}</strong><small>공격 +${w.power} · 사거리 ${w.range}칸</small><div class="weaponButtons"><button onclick="equipStoredWeapon(${i})">장착</button><button onclick="sellStoredWeapon(${i})">판매</button></div></div>`).join(''):'<p class="muted">보관한 무기가 없어. 새 무기를 구매하면 기존 무기가 여기에 보관돼.</p>'}</div></div>`;
+}
+function useGuidebook(stat){
+ if(s.phase!=='shop'||s.job!=='adventurer'||s.guideUsed?.[s.room])return;
+ const allowed=['strength','luck','defense','magic','vitality'];
+ if(!allowed.includes(stat))return;
+ s.guideUsed??={};
+ const before=s.stats[stat];
+ const amount=stat==='luck'?Math.min(1,Math.max(0,18-before)):2;
+ s.stats[stat]+=amount;
+ s.guideUsed[s.room]=true;
+ const names={strength:'힘',luck:'행운',defense:'방어',magic:'마법',vitality:'활력'};
+ log(`📖 가이드북: ${names[stat]} +${amount}`);
+ render();
+}
+function renderGuidebook(){
+ if(s.job!=='adventurer')return '';
+ const used=!!s.guideUsed?.[s.room];
+ const stats=[['힘','strength'],['행운','luck'],['방어','defense'],['마법','magic'],['활력','vitality']];
+ return `<div class="guideBox"><h3>📖 모험가의 가이드북</h3><p>${used?'이번 상점에서는 이미 가이드북을 사용했어.':'이번 상점에서 한 번! 올릴 능력치를 선택해.'}</p><div class="guideBtns">${stats.map(([name,key])=>`<button onclick="useGuidebook('${key}')" ${used?'disabled':''}>${name} +${key==='luck'?1:2}</button>`).join('')}</div></div>`;
+}
+function leaveShop(){if(s.phase!=='shop')return;s.room++;beginRoom()}
+function closePanels(){let p=document.getElementById('subpanel');p.classList.add('hidden');p.dataset.mode='';p.innerHTML=''}
+function restart(){
+ busy=false;
+ s=fresh();
+ document.getElementById('arena').className='arena';
+ document.getElementById('arena').innerHTML='';
+ document.getElementById('stageFx').classList.add('hidden');
+ document.getElementById('shopPanel').innerHTML='';
+ closePanels();
+ render();
+ document.getElementById('turnIndicator').textContent='내 차례 · 행동을 골라줘';
+ notice('새로운 모험이 시작됐어!');
+ window.scrollTo?.({top:0,behavior:'smooth'});
+}
+
+function heldWeapon(){
+ const w=s.weapon||{name:'나무 검',type:'weapon'};
+ const id=weaponIconId(w);
+ if(id==='bow')return '<path d="M69 17Q92 38 69 65M69 17V65M60 40L87 35M81 31L87 35 82 40" fill="none" stroke="#8a5b32" stroke-width="3"/>';
+ if(id==='wand')return '<path d="M64 48L83 13" stroke="#77589d" stroke-width="6"/><path d="M83 4L86 11 94 13 86 16 83 24 79 16 72 13 79 10Z" fill="#a996e9" stroke="#55416b" stroke-width="2"/>';
+ if(id==='longsword')return '<path d="M64 49L84 2 91 4 71 52Z" fill="#b6d5df" stroke="#485866" stroke-width="2"/><path d="M61 49L74 55" stroke="#9a673b" stroke-width="5"/>';
+ if(w.name.includes('철'))return '<path d="M65 45L81 11 88 13 70 49Z" fill="#b3c5d5" stroke="#455e69" stroke-width="2"/><path d="M61 46L74 51" stroke="#9a673b" stroke-width="5"/>';
+ return '<path d="M65 45L80 17 85 20 71 49Z" fill="#bd9869" stroke="#755438" stroke-width="2"/><path d="M61 46L74 51" stroke="#92623d" stroke-width="5"/>';
+}
+function doodle(kind){
+ if(kind==='cowboy')return `<svg viewBox="0 0 90 90" aria-label="카우보이"><path d="M27 75L20 43 32 35 60 35 71 75Z" fill="#7a4934" stroke="#49352d" stroke-width="3"/><path d="M30 42Q45 51 59 42L56 27H33Z" fill="#d7a077"/><path d="M23 27Q45 20 68 27L76 33Q44 39 15 33Z" fill="#50352c"/><path d="M31 27L35 10H56L63 27" fill="#6b4732" stroke="#392820" stroke-width="3"/><path d="M37 34L44 36 51 34" stroke="#36231c" stroke-width="3" fill="none"/><path d="M63 52L81 48 85 54 68 60" fill="#9ca6ac" stroke="#4a4b4c" stroke-width="2"/><path d="M28 75L25 87M60 75L64 87" stroke="#3e302a" stroke-width="7"/></svg>`;
+ const wrap=(x)=>`<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg" aria-label="${kind} 손그림"><g stroke="#382e29" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">${x}</g></svg>`;
+ if(kind==='hero')return wrap('<path fill="#765d49" d="M26 82L33 59 57 59 65 82 53 82 47 69 41 82Z"/><path fill="#67a7a4" d="M29 32Q45 23 61 32L59 64 30 64Z"/><path fill="#eec7a1" d="M31 16Q45 1 59 17L56 35 33 35Z"/><path fill="#b9bfc2" d="M30 17L37 7 54 7 62 18 57 22 33 22Z"/><path fill="none" d="M37 27h2m12 0h2"/><path fill="#eec7a1" d="M58 36L69 44 66 50 56 43Z"/>'+heldWeapon()+'<path fill="#a8bb79" d="M24 41Q8 40 14 60Q22 68 30 55Z"/>');
+ if(kind==='speed')return wrap('<path fill="#5b9be3" d="M25 29L14 17 31 21Q45 12 59 22L77 14 67 36 69 65Q46 78 22 64Z"/><path fill="#9bd5fa" d="M31 42Q45 32 60 42L58 57Q45 64 31 57Z"/><path fill="#182f56" d="M32 36h8m12 0h8"/><path fill="none" d="M42 52l9-2M22 64L12 83M61 63L72 83M9 42l-7 6m8 1-7 6"/>');
+ if(kind==='ranger')return wrap('<path fill="#bd5553" d="M23 30L15 12 33 21Q45 12 60 23L76 12 68 37 70 65Q46 80 22 64Z"/><path fill="#efb1a1" d="M30 42Q45 32 62 42L60 59Q46 67 30 59Z"/><path fill="#3c1d1b" d="M33 37h6m15 0h6"/><path fill="none" d="M43 52h8M69 25Q85 47 69 74M70 25v49M61 48l23-6"/><path fill="#9d5b45" d="M19 64L13 82M65 65L71 82"/>');
+ if(kind==='gold')return wrap('<path fill="#e7bf45" d="M23 32L14 13 33 23Q45 13 60 23L76 13 68 39 70 65Q46 82 22 64Z"/><path fill="#ffe2a3" d="M30 43Q45 33 62 43L60 59Q46 66 30 58Z"/><path fill="#3e2b1b" d="M33 37h4m18 0h4"/><path fill="#e2a830" d="M45 53l8 0M23 65L17 82M65 65L71 82"/><circle cx="74" cy="52" r="9" fill="#f9e17a"/><path d="M74 47v10m-4-7h8" fill="none"/>');
+ if(kind==='werewolf')return wrap('<path fill="#625b70" d="M9 60L17 38 31 37 38 7 49 31 70 10 68 42 83 52 73 69 24 68 18 85Z"/><path fill="#c4b5b1" d="M51 47L81 52 65 67 48 59Z"/><path d="M52 45h9" stroke="#f3434a" stroke-width="5"/><path d="M58 62l6 10 6-10" fill="#fff"/><path d="M30 67l-4 18M59 66l5 19" fill="none"/>');
+ if(kind==='knight')return wrap('<path d="M26 83L31 51 58 51 65 83" fill="#596277"/><path d="M24 37L35 25 57 25 67 37 60 62 28 62Z" fill="#8a95a8"/><path d="M28 21Q42 0 59 21L56 39H31Z" fill="#abb7c6"/><path d="M34 29h19" fill="none" stroke-width="5"/><path d="M64 47L81 9 86 12 70 51" fill="#c9d6df"/><path d="M20 45L11 35 6 42 15 61 27 57Z" fill="#6c507e"/>');
+ if(kind==='fierce')return wrap('<path fill="#734e45" d="M9 57Q13 34 30 40L37 13 50 33 67 18 67 41 83 52 73 67 26 67 22 84 13 83 16 64Z"/><path fill="#b98d79" d="M51 47L80 53 67 64 51 58Z"/><path fill="#e34d43" d="M53 44h8"/><path fill="#332b29" d="M70 56h6"/><path fill="#fff1dc" d="M60 60l5 10 5-10"/><path fill="none" d="M32 65L30 82M60 65L62 82"/>');
+ if(kind==='archer')return wrap('<path fill="#e5d7b3" d="M33 60L27 83M55 60L63 83"/><path fill="#7b7b91" d="M30 35L59 35 56 65 33 65Z"/><path fill="#eee2bf" d="M30 16Q45 4 60 16L58 34 32 34Z"/><path fill="#242324" d="M35 22h6v5h-6zm13 0h6v5h-6z"/><path fill="none" d="M42 31h8M64 13Q83 42 64 70M65 13L65 70M55 44L78 40"/>');
+ if(kind==='wolf')return wrap('<path fill="#918b86" d="M12 57Q16 37 33 40L40 21 49 35 63 28 66 43 79 51 72 62 28 65 22 81 17 80 17 64Z"/><path fill="#e6dfcf" d="M54 47L74 51 65 61 51 57Z"/><path fill="#272522" d="M54 45h4m13 8h2"/><path fill="none" d="M34 64L33 79M59 62L59 79"/>');
+ return wrap('<path fill="#b1b879" d="M23 32L16 13 34 22Q47 14 60 24L76 13 68 39 70 65Q46 82 22 64Z"/><path fill="#f2d7a6" d="M30 43Q45 33 62 43L60 59Q46 66 30 58Z"/><path fill="#322b27" d="M33 37h4m18 0h4"/><path fill="none" d="M43 51Q47 55 51 51"/><path fill="#987457" d="M24 63L18 82M65 63L70 82"/><path fill="#b2b9bf" d="M74 34L83 23 87 27 77 40Z"/>');
+}
+let nextFx="";function effect(name){nextFx=name}
+function render(){
+ document.body.classList.toggle('started',s.phase!=='choose');
+ document.getElementById('classLabel').textContent='모험가';
+ document.getElementById('location').textContent=`${s.room} / 50번 방 · ${s.weather==='blood'?'블러드 문':s.weather==='night'?'밤':'낮'} ${s.phase==='shop'?'· 상점':''}`;
+ document.getElementById('coins').textContent=`코인 ${s.coins}`;
+ document.getElementById('equipment').textContent=`${s.weapon.name} · ${s.armor} · 이동 ${s.moveRange||1}칸`;
+ document.getElementById('hpLabel').textContent=`체력 ${s.hp} / ${s.maxHp}`;
+ document.getElementById('hpbar').style.width=(s.hp/s.maxHp*100)+'%';
+ document.getElementById('stats').innerHTML=[['힘','strength'],['행운','luck'],['방어','defense'],['마법','magic'],['활력','vitality']].map(([n,k])=>`<div class="stat">${n}<b>${s.stats[k]}</b></div>`).join('');
+ document.getElementById('eventSection').classList.toggle('hidden',s.phase!=='event');
+ if(s.phase==='event')renderEvent();
+ document.getElementById('battleSection').classList.toggle('hidden',!['battle','cleared'].includes(s.phase));
+ document.getElementById('shopSection').classList.toggle('hidden',s.phase!=='shop');
+ document.getElementById('endSection').classList.toggle('hidden',!['dead','victory'].includes(s.phase));
+ const alive=aliveEnemies(),e=selected();
+ if(s.phase==='battle'&&e){
+  document.getElementById('enemyTitle').textContent=`적 ${alive.length}마리 · 선택: ${e.name} · 사거리 ${e.range}`;
+  document.getElementById('enemyHp').textContent=`선택한 적 체력 ${e.hp} / ${e.maxHp}`;
+  let n=boardSize();document.getElementById('arena').style.gridTemplateColumns=`repeat(${n},minmax(0,1fr))`;
+  document.getElementById('arena').innerHTML=Array.from({length:n},(_,i)=>{
+   let monster=alive.find(x=>x.pos===i),isPlayer=i===s.playerPos;const fog=s.weather==='night'&&Math.abs(i-s.playerPos)>2;
+   return `<div class="cell ${isPlayer?'player':''} ${monster?'enemy':''} ${monster&&monster.id===e.id?'target':''}" ${monster?`data-enemy-id="${monster.id}" onclick="selectEnemy(${monster.id})"`:''}>
+    <span class="sprite">${isPlayer?doodle('hero'):monster?doodle(monster.kind):'<span class="floorMark">·</span>'}</span>
+    <small>${monster&&!fog?monster.hp+'/'+monster.maxHp+' HP':fog?'시야 밖':(i+1)+'칸'}</small>
+    ${monster&&!fog?`<span class="monsterLabel">${monster.name}</span>`:''}${s.boss?.active&&s.boss.bombs?.some(b=>Math.abs(b.pos-i)<=1)?`<span class="bombMarker">💣 ${Math.min(...s.boss.bombs.filter(b=>Math.abs(b.pos-i)<=1).map(b=>b.turns))}</span>`:''}</div>`;
+  }).join('');
+  document.getElementById('distance').textContent=`자동 조준: 가장 가까운 적 · 거리 ${distance(e)}칸 · 직접 선택도 가능`;
+  document.getElementById('range').textContent=`${s.weapon.name} 사거리 ${s.weapon.range}칸`;
+ }
+ document.getElementById('actions').innerHTML=s.phase==='cleared'?'<button class="primary" onclick="nextRoom()" style="grid-column:1/-1">'+uiIcon('next')+' 다음 방</button>':
+ '<button class="primary" onclick="attack()">'+uiIcon('sword')+' 공격</button><button class="secondary" onclick="guard()">🛡️ 방어</button><button onclick="showMove()">'+uiIcon('walk')+' 이동</button><button class="secondary" onclick="showSpecial()">✨ 특수 행동</button>';
+ if(s.phase==='shop'){
+  document.getElementById('shopItems').innerHTML=s.shop.map((id,i)=>{
+   let it=item(id);return `<div class="item">${itemIcon(it.id)}<strong>${it.name}</strong><div class="muted">${it.desc}</div><p class="tag">${it.price} 코인</p><button onclick="buy(${i})" ${s.coins<it.price?'disabled':''}>구매</button></div>`;
+  }).join('');
+  document.getElementById('weaponExchange').innerHTML=renderWeaponExchange();
+  document.getElementById('guidebook').innerHTML=renderGuidebook();
+ }
+ if(s.phase==='dead'){document.getElementById('deathBadge').innerHTML=skullSVG;document.getElementById('endTitle').textContent='모험 실패';document.getElementById('endMessage').textContent=`${s.room}번 방에서 쓰러졌어.`}
+ if(s.phase==='victory'){document.getElementById('deathBadge').innerHTML='';document.getElementById('endTitle').textContent='던전 정복!';document.getElementById('endMessage').textContent='50개 방을 모두 클리어했어!'}
+ document.getElementById('log').style.maxHeight=fullLog?'27dvh':'62px';
+ document.getElementById('log').innerHTML=s.logs.slice(0,fullLog?35:3).map(x=>`<p>${x}</p>`).join('');
+ document.getElementById('actions').classList.toggle('busy',busy);
+ save();
+}
+if(s.phase==='event'&&s.event?.kind==='weather'&&s.room<=20){
+ s.event.kind=eventKindForBlock(eventBlock(s.room));
+ if(s.eventSchedule[eventBlock(s.room)])s.eventSchedule[eventBlock(s.room)].kind=s.event.kind;
+}
+if(s.phase==='bossIntro'||s.phase==='bossFinale'){s.phase='battle';if(s.boss)s.boss.active=true;}
+if(s._needsRoomStart){delete s._needsRoomStart;beginRoom();}
+else if(s.phase==='battle'&&!aliveEnemies().length){beginRoom();}
+render();
+
+// 25번 방 보스: 전투, 다이너마이트, 컷씬 및 최후의 DRAW 대결
+function cowboyOverlay(){return document.getElementById('cowboyOverlay')}
+function cowboyShow(html,cls=''){let el=cowboyOverlay();el.className='cowboyOverlay '+cls;el.innerHTML=html;}
+function cowboyHide(){let el=cowboyOverlay();el.className='cowboyOverlay hidden';el.innerHTML='';}
+function startCowboy(){
+ s.phase='bossIntro';s.boss={active:true,phase:1,shots:0,bombs:[],rest:0,afterRest:false};s.playerPos=0;
+ s.enemies=[{id:1,kind:'cowboy',name:'카우보이',hp:200,maxHp:200,damage:11,range:2,speed:0,pos:boardSize()-1,goldBonus:0}];autoLock();render();
+ cowboyShow('<div class="cowboyIntroArt back" role="img" aria-label="석양 속 카우보이"></div><div class="cowboyCaption">황야의 낯선 사내...</div>','intro');
+ setTimeout(()=>{if(s.phase==='bossIntro')cowboyShow('<div class="cowboyIntroArt glare" role="img" aria-label="플레이어를 노려보는 카우보이"></div><div class="cowboyCaption">그가 매서운 눈으로 돌아본다.</div>','intro')},950);
+ setTimeout(()=>{if(s.phase==='bossIntro')cowboyShow('<div class="cowboyIntroArt spin" role="img" aria-label="권총을 돌리는 카우보이"></div><div class="cowboyCaption">철컥! 권총이 돌아간다.</div>','intro')},1900);
+ setTimeout(()=>{if(s.phase==='bossIntro')cowboyShow('<div class="cowboyIntroArt aim" role="img" aria-label="권총을 겨누는 카우보이"></div><div class="cowboyBossName">카우보이</div>','intro')},2850);
+ setTimeout(()=>{if(s.phase==='bossIntro'){cowboyHide();s.phase='battle';log('🤠 25번 방 보스: 카우보이 등장!');render()}},3900);
+}
+function cowboyBomb(){let pos=rand(0,boardSize()-1);s.boss.bombs.push({pos,turns:3});log(`💣 카우보이가 ${pos+1}칸에 다이너마이트를 던졌다! (3턴)`);notice(`💣 ${pos+1}칸 다이너마이트! 좌우 1칸 폭발 · 3턴 뒤 폭발`)}
+async function cowboyTurn(){
+ const b=s.boss,e=aliveEnemies()[0];if(!b?.active||!e)return;
+ document.getElementById('turnIndicator').textContent='🤠 카우보이의 차례';
+ // 폭탄은 플레이어가 행동할 때마다 1턴 진행. 새 폭탄은 다음 턴부터 카운트.
+ for(const bomb of [...b.bombs]){bomb.turns--;if(bomb.turns<=0){log(`💥 ${bomb.pos+1}칸의 다이너마이트 폭발!`);notice('💥 다이너마이트 폭발!');if(Math.abs(s.playerPos-bomb.pos)<=1){const dmg=14;s.hp=Math.max(0,s.hp-dmg);floatNumber('-'+dmg,'player');log(`폭발 범위 안! 방어 판정 없이 ${dmg} 피해.`)}b.bombs.splice(b.bombs.indexOf(bomb),1);if(s.hp<=0){render();await playerDeath();return}}}
+ if(b.rest>0){b.rest--;log(`😮‍💨 카우보이 휴식 중 (${b.rest}턴 남음)`);notice('카우보이가 퀵 드로우 후 지쳐 쉬고 있다.');if(b.rest===0)b.afterRest=true;render();return}
+ if(b.afterRest){cowboyBomb();b.afterRest=false;e.pos=rand(1,boardSize()-1);log('카우보이가 위치를 바꿨다.');render();return}
+ if(distance(e)>2){e.pos=clamp(s.playerPos+(e.pos>s.playerPos?2:-2),0,boardSize()-1);if(e.pos===s.playerPos)e.pos=clamp(e.pos+1,0,boardSize()-1);log('카우보이가 사거리 안으로 움직였다.');render();return}
+ if(b.phase===2&&b.shots>=3){b.shots=0;notice('⚡ 퀵 드로우! 사거리 무제한!');log('⚡ 카우보이 퀵 드로우!');await sleep(420);const dmg=22;s.hp=Math.max(0,s.hp-dmg);floatNumber('-'+dmg,'player');log(`퀵 드로우 ${dmg} 피해!`);b.rest=2;render();if(s.hp<=0)await playerDeath();return}
+ b.shots++;notice(`🔫 카우보이 권총 발사! (${b.shots}/${b.phase===1?5:3})`);await sleep(200);
+ const r=await rollScene('권총 방어 판정',`목표 ${defenseTarget()} · 행운 +${s.stats.luck}`);
+ if(defenseSuccess(r)){log(`카우보이의 총알을 막았다! D20 ${r}`);floatNumber('방어!','player','block')}
+ else{const dmg=Math.max(0,11-s.stats.defense);s.hp=Math.max(0,s.hp-dmg);floatNumber('-'+dmg,'player');log(`카우보이 권총 ${dmg} 피해!`)}
+ fxHide();if(s.hp<=0){render();await playerDeath();return}
+ if(b.phase===1&&b.shots>=5){b.shots=0;cowboyBomb();const options=Array.from({length:boardSize()},(_,i)=>i).filter(i=>i!==s.playerPos);e.pos=options[rand(0,options.length-1)];log('카우보이가 무작위 위치로 이동했다.');}
+ render();
+}
+function cowboyPhaseCheck(){if(s.boss?.active&&s.boss.phase===1&&s.enemies[0]?.hp<=100){s.boss.phase=2;s.boss.shots=0;log('⚡ 2페이즈! 카우보이가 퀵 드로우를 준비한다.');notice('⚡ 카우보이 2페이즈! 권총 3발 뒤 퀵 드로우!')}}
+function startCowboyFinale(){s.boss.active=false;s.phase='bossFinale';s.enemies[0].hp=0;render();cowboyShow('<div class="cowboySun"></div><div class="cowboySilhouette">🤠　　　🧍</div><div class="cowboyCaption">석양 아래, 마지막 결투...<br>모험가가 권총을 집어 든다.</div><div class="tumbleweed">✺</div>','finale');setTimeout(()=>cowboyDuel(),2400)}
+function cowboyDuel(){if(s.phase!=='bossFinale')return;s.boss.drawReady=false;cowboyShow('<div class="cowboySun"></div><div class="cowboySilhouette">🤠　　　 🧍</div><div class="tumbleweed">✺</div><div class="cowboyCaption">READY...<br><small>DRAW!가 나오면 빠르게 터치!</small></div>','finale');const wait=rand(1500,3200);setTimeout(()=>{if(s.phase!=='bossFinale')return;s.boss.drawReady=true;s.boss.drawAt=performance.now();cowboyShow('<div class="cowboySun"></div><div class="cowboySilhouette">🤠　　　🧍</div><button class="drawButton" onclick="cowboyDraw()">DRAW!<small>지금 터치!</small></button>','finale');setTimeout(()=>{if(s.phase==='bossFinale'&&s.boss.drawReady){s.boss.drawReady=false;cowboyShow('<div class="cowboyCaption">너무 늦었다!<br><button onclick="cowboyDuel()">다시 대결</button></div>','finale')}},1250)},wait)}
+function cowboyDraw(){if(s.phase!=='bossFinale'||!s.boss.drawReady)return;s.boss.drawReady=false;const time=performance.now()-s.boss.drawAt;if(time>1250){cowboyDuel();return;}cowboyShow('<div class="cowboySun"></div><div class="cowboySilhouette">🧍　✨　🤠</div><div class="cowboyBossName">승리!</div><div class="cowboyCaption">DRAW 성공! 카우보이를 쓰러트렸다!</div>','finale');setTimeout(()=>{if(s.phase!=='bossFinale')return;cowboyHide();s.cowboyDone=true;s.boss=null;s.enemies=[];s.enemy=null;s.cleared++;s.coins+=250;log('🤠 카우보이 격파! 보상 250 코인!');s.phase='shop';s.shop=newShopStock();const recovered=Math.min(s.maxHp-s.hp,Math.ceil(s.maxHp/2));s.hp+=recovered;log(`25번 방 상점 도착! 체력 ${recovered} 회복.`);render()},1600)}
+</script><div id="cowboyOverlay" class="cowboyOverlay hidden"></div></body></html>
